@@ -5,7 +5,8 @@ import ayds.songinfo.home.model.HomeModelInjector
 
 object HomeViewInjector {
 
-    val songDescriptionHelper: SongDescriptionHelper = SongDescriptionHelperImpl()
+    private val dateFormatter: DateFormatter = DefaultDateFormatter()
+    val songDescriptionHelper: SongDescriptionHelper = SpotifySongDescriptionHelper(dateFormatter)
 
     fun init(homeView: HomeView) {
         HomeModelInjector.initHomeModel(homeView)

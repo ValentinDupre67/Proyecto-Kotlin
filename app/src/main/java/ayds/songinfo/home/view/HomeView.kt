@@ -159,7 +159,7 @@ class HomeViewActivity : Activity(), HomeView {
             songId = "",
             songImageUrl = DEFAULT_IMAGE,
             songUrl = "",
-            songDescription = songDescriptionHelper.getSongDescriptionText(),
+            songDescription = songDescriptionHelper.getSongDescriptionText(EmptySong),
             actionsEnabled = false
         )
     }

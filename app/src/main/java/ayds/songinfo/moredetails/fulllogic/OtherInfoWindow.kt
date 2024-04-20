@@ -32,15 +32,14 @@ class OtherInfoWindow : Activity() {
         open(intent.getStringExtra("artistName"))
     }
 
-    fun getARtistInfo(artistName: String?) {
+    fun getArtistInfo(artistName: String?) {
 
-        // create
         val retrofit = Retrofit.Builder()
             .baseUrl("https://ws.audioscrobbler.com/2.0/")
             .addConverterFactory(ScalarsConverterFactory.create())
             .build()
         val lastFMAPI = retrofit.create(LastFMAPI::class.java)
-        Log.e("TAG", "artistName $artistName")
+        Log.e("API", "artistName $artistName")
         Thread {
             val article = dataBase!!.ArticleDao().getArticleByArtistName(artistName!!)
             var text = ""
@@ -54,28 +53,29 @@ class OtherInfoWindow : Activity() {
                 }
             } else { // get from service
                 try {
-                    val callResponse :  Response<String> = lastFMAPI.getArtistInfo(artistName).execute()
-                    Log.e("TAG", "JSON " + callResponse.body())
+                    val callResponse: Response<String> = lastFMAPI.getArtistInfo(artistName).execute()
+                    Log.e("API", "JSON " + callResponse.body())
                     val response = Gson().fromJson(callResponse.body(), JsonObject::class.java)
                     val artist = response["artist"].getAsJsonObject()
                     val artistBio = artist["bio"].getAsJsonObject()
-                    val content = artistBio["content"]
-                    val url = artist["url"]
-                    if (content == null) {
+                    val contentBio = artistBio["content"]
+                    val artistUrl = artist["url"]
+                    if (contentBio == null) {
                         text = "No Results"
                     } else {
-                        text = content.asString.replace("\\n", "\n")
-                        val textHtml = textToHtml(text, artistName)
+                        text = contentBio.asString.replace("\\n", "\n")
+                        val textInHtml = textToHtml(text, artistName)
+
                         Thread {
                             dataBase!!.ArticleDao().insertArticle(
                                 ArticleEntity(
-                                    artistName, textHtml, url.asString
+                                    artistName, textInHtml, artistUrl.asString
                                 )
                             )
                         }
                             .start()
                     }
-                    val urlString = url.asString
+                    val urlString = artistUrl.asString
                     findViewById<View>(R.id.openUrlButton1).setOnClickListener {
                         val intent = Intent(Intent.ACTION_VIEW)
                         intent.setData(Uri.parse(urlString))
@@ -106,7 +106,7 @@ class OtherInfoWindow : Activity() {
             Log.e("TAG", "" + dataBase!!.ArticleDao().getArticleByArtistName("test"))
             Log.e("TAG", "" + dataBase!!.ArticleDao().getArticleByArtistName("nada"))
         }.start()
-        getARtistInfo(artist)
+        getArtistInfo(artist)
     }
 
     companion object {

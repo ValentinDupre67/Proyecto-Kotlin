@@ -21,7 +21,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.io.IOException
 import java.util.Locale
 
-class OtherInfoWindow : Activity() {
+class MoreDetails : Activity() {
     private var textPanel: TextView? = null
     private var articleDatabase: ArticleDatabase? = null
     private var openUrlButton: Button? = null

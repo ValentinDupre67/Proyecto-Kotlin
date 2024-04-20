@@ -27,7 +27,7 @@
                 android:paddingTop="24dp"/>
 
             <TextView
-                android:id="@+id/textPane1"
+                android:id="@+id/textPanel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:autoLink="web"
@@ -35,7 +35,7 @@
                 android:padding="16dp" />
 
             <Button
-                android:id="@+id/openUrlButton1"
+                android:id="@+id/openUrlButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"

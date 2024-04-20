@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.text.Html
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.room.Room.databaseBuilder
@@ -21,19 +22,21 @@ import java.io.IOException
 import java.util.Locale
 
 class OtherInfoWindow : Activity() {
-    private var textPane1: TextView? = null
+    private var textPanel: TextView? = null
+    private var articleDatabase: ArticleDatabase? = null
+    private var openUrlButton: Button? = null
 
     //private JPanel imagePanel;
     // private JLabel posterImageLabel;
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_info)
-        textPane1 = findViewById(R.id.textPane1)
+        textPanel = findViewById(R.id.textPanel)
+        openUrlButton = findViewById(R.id.openUrlButton)
         open(intent.getStringExtra("artistName"))
     }
 
     fun getArtistInfo(artistName: String?) {
-
         val retrofit = Retrofit.Builder()
             .baseUrl("https://ws.audioscrobbler.com/2.0/")
             .addConverterFactory(ScalarsConverterFactory.create())
@@ -41,12 +44,12 @@ class OtherInfoWindow : Activity() {
         val lastFMAPI = retrofit.create(LastFMAPI::class.java)
         Log.e("API", "artistName $artistName")
         Thread {
-            val article = dataBase!!.ArticleDao().getArticleByArtistName(artistName!!)
-            var text = ""
+            val article = articleDatabase!!.ArticleDao().getArticleByArtistName(artistName!!)
+            var biographyText = ""
             if (article != null) { // exists in db
-                text = "[*]" + article.biography
+                biographyText = "[*]" + article.biography
                 val urlString = article.articleUrl
-                findViewById<View>(R.id.openUrlButton1).setOnClickListener {
+                openUrlButton?.setOnClickListener {
                     val intent = Intent(Intent.ACTION_VIEW)
                     intent.setData(Uri.parse(urlString))
                     startActivity(intent)
@@ -61,13 +64,13 @@ class OtherInfoWindow : Activity() {
                     val contentBio = artistBio["content"]
                     val artistUrl = artist["url"]
                     if (contentBio == null) {
-                        text = "No Results"
+                        biographyText = "No Results"
                     } else {
-                        text = contentBio.asString.replace("\\n", "\n")
-                        val textInHtml = textToHtml(text, artistName)
+                        biographyText = contentBio.asString.replace("\\n", "\n")
+                        val textInHtml = textToHtml(biographyText, artistName)
 
                         Thread {
-                            dataBase!!.ArticleDao().insertArticle(
+                            articleDatabase!!.ArticleDao().insertArticle(
                                 ArticleEntity(
                                     artistName, textInHtml, artistUrl.asString
                                 )
@@ -76,45 +79,45 @@ class OtherInfoWindow : Activity() {
                             .start()
                     }
                     val urlString = artistUrl.asString
-                    findViewById<View>(R.id.openUrlButton1).setOnClickListener {
+                    openUrlButton?.setOnClickListener {
                         val intent = Intent(Intent.ACTION_VIEW)
                         intent.setData(Uri.parse(urlString))
                         startActivity(intent)
                     }
-                } catch (e1: IOException) {
-                    Log.e("TAG", "Error $e1")
-                    e1.printStackTrace()
+                } catch (ioException: IOException) {
+                    Log.e("TAG", "Error: $ioException")
+                    ioException.printStackTrace()
                 }
             }
             val imageUrl =
                 "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
             Log.e("TAG", "Get Image from $imageUrl")
-            val finalText = text
             runOnUiThread {
                 Picasso.get().load(imageUrl).into(findViewById<View>(R.id.imageView1) as ImageView)
-                textPane1!!.text = Html.fromHtml(finalText)
+                textPanel!!.text = Html.fromHtml(biographyText)
             }
         }.start()
     }
 
-    private var dataBase: ArticleDatabase? = null
     private fun open(artist: String?) {
-        dataBase =
+        articleDatabase =
             databaseBuilder(this, ArticleDatabase::class.java, "database-name-thename").build()
-        Thread {
-            dataBase!!.ArticleDao().insertArticle(ArticleEntity("test", "sarasa", ""))
-            Log.e("TAG", "" + dataBase!!.ArticleDao().getArticleByArtistName("test"))
-            Log.e("TAG", "" + dataBase!!.ArticleDao().getArticleByArtistName("nada"))
-        }.start()
+//        TODO: Preguntar que hacer con los casos de prueba
+//        Thread {
+//            articleDatabase!!.ArticleDao().insertArticle(ArticleEntity("test", "sarasa", ""))
+//            Log.e("TAG", "" + articleDatabase!!.ArticleDao().getArticleByArtistName("test"))
+//            Log.e("TAG", "" + articleDatabase!!.ArticleDao().getArticleByArtistName("nada"))
+//        }.start()
         getArtistInfo(artist)
     }
 
-    companion object {
+    companion object { // TODO: Sospechas de que está mal crear el objeto
         const val ARTIST_NAME_EXTRA = "artistName"
         fun textToHtml(text: String, term: String?): String {
-            val builder = StringBuilder()
-            builder.append("<html><div width=400>")
-            builder.append("<font face=\"arial\">")
+            val stringBuilder = StringBuilder()
+            stringBuilder.append("<html><div width=400>")
+            stringBuilder.append("<font face=\"arial\">")
+            // TODO: Esto creo que debería hacerlo otra función
             val textWithBold = text
                 .replace("'", " ")
                 .replace("\n", "<br>")
@@ -122,9 +125,9 @@ class OtherInfoWindow : Activity() {
                     "(?i)$term".toRegex(),
                     "<b>" + term!!.uppercase(Locale.getDefault()) + "</b>"
                 )
-            builder.append(textWithBold)
-            builder.append("</font></div></html>")
-            return builder.toString()
+            stringBuilder.append(textWithBold)
+            stringBuilder.append("</font></div></html>")
+            return stringBuilder.toString()
         }
     }
 }

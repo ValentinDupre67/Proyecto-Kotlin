@@ -30,11 +30,13 @@ class MoreDetails : Activity() {
     private var textPanel: TextView? = null
     private var articleDatabase: ArticleDatabase? = null
     private var openUrlButton: Button? = null
+    private var logoImageView: ImageView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_info)
         textPanel = findViewById(R.id.textPanel)
+        logoImageView = findViewById(R.id.imageView1);
         openUrlButton = findViewById(R.id.openUrlButton)
         open(intent.getStringExtra("artistName"))
     }
@@ -108,7 +110,7 @@ class MoreDetails : Activity() {
 
     private fun updateViewItems(biographyText: String) {
         runOnUiThread {
-            Picasso.get().load(imageUrl).into(findViewById<View>(R.id.imageView1) as ImageView)
+            Picasso.get().load(imageUrl).into(logoImageView)
             textPanel!!.text = Html.fromHtml(biographyText)
         }
     }

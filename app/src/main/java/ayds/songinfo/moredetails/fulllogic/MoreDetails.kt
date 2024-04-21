@@ -39,8 +39,13 @@ class MoreDetails : Activity() {
         open(intent.getStringExtra("artistName"))
     }
 
-    fun getArtistInfo(artistName: String?) {
+    private fun open(artist: String?) {
+        articleDatabase =
+            databaseBuilder(this, ArticleDatabase::class.java, "database-name-thename").build()
+        getArtistInfo(artist)
+    }
 
+    fun getArtistInfo(artistName: String?) {
         Log.e("API", "artistName $artistName")
         Thread {
             val article = articleDatabase!!.ArticleDao().getArticleByArtistName(artistName!!)
@@ -48,11 +53,11 @@ class MoreDetails : Activity() {
             if (article != null) {
                 biographyText = "[*]" + article.biography
                 val urlString = article.articleUrl
-                setOnClickListenerOnButton(urlString)
-            } else { // get from service
+                setOnClickListenerButton(urlString)
+            } else {
                 biographyText = getArtistFromService( artistName, biographyText)
             }
-            updateItemsView(biographyText)
+            updateViewItems(biographyText)
         }.start()
     }
 
@@ -61,8 +66,8 @@ class MoreDetails : Activity() {
         biographyText: String
     ): String {
         val lastFMAPI = getArtistRequest()
+        var biographyTextAux = biographyText
 
-        var biographyText1 = biographyText
         try {
             val callResponse: Response<String> = lastFMAPI.getArtistInfo(artistName).execute()
             Log.e("API", "JSON " + callResponse.body())
@@ -71,21 +76,20 @@ class MoreDetails : Activity() {
             val artistBio = artist["bio"].getAsJsonObject()
             val contentBio = artistBio["content"]
             val artistUrl = artist["url"]
-            if (contentBio == null) {
-                biographyText1 = "No Results"
+            if (contentBio == null) { /* TODO: Esto deberia ponerlo en una funcion */
+                biographyTextAux = "No Results"
             } else {
-                biographyText1 = contentBio.asString.replace("\\n", "\n")
-                val textInHtml = textToHtml(biographyText1, artistName)
+                biographyTextAux = contentBio.asString.replace("\\n", "\n")
+                val textInHtml = textToHtml(biographyTextAux, artistName)
 
                 insertArticleInDatabase(artistName, textInHtml, artistUrl)
             }
-            val urlString = artistUrl.asString
-            setOnClickListenerOnButton(urlString)
+            setOnClickListenerButton(artistUrl.asString)
         } catch (ioException: IOException) {
             Log.e("TAG", "Error: $ioException")
             ioException.printStackTrace()
         }
-        return biographyText1
+        return biographyTextAux
     }
 
     private fun getArtistRequest(): ArtistAPIRequest {
@@ -102,7 +106,7 @@ class MoreDetails : Activity() {
         return retrofit
     }
 
-    private fun updateItemsView(biographyText: String) {
+    private fun updateViewItems(biographyText: String) {
         runOnUiThread {
             Picasso.get().load(imageUrl).into(findViewById<View>(R.id.imageView1) as ImageView)
             textPanel!!.text = Html.fromHtml(biographyText)
@@ -119,7 +123,7 @@ class MoreDetails : Activity() {
         }.start()
     }
 
-    private fun setOnClickListenerOnButton(urlString: String?) {
+    private fun setOnClickListenerButton(urlString: String?) {
         openUrlButton?.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW)
             intent.setData(Uri.parse(urlString))
@@ -127,13 +131,9 @@ class MoreDetails : Activity() {
         }
     }
 
-    private fun open(artist: String?) {
-        articleDatabase =
-            databaseBuilder(this, ArticleDatabase::class.java, "database-name-thename").build()
-        getArtistInfo(artist)
-    }
+    companion object {
+        const val ARTIST_NAME_EXTRA = "artistName"
 
-    companion object { // TODO: Sospechas de que está mal crear el objeto
         fun textToHtml(text: String, term: String?): String {
             val stringBuilder = StringBuilder()
             stringBuilder.append("<html><div width=400>")

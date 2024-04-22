@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
-import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -64,31 +63,31 @@ class MoreDetails : Activity() {
     }
 
     private fun getArtistFromService(artistName: String,biographyText: String): String {
-        val lastFMAPI = getArtistRequest()
         var biographyTextAux = biographyText
-
         try {
-            val callResponse: Response<String> = lastFMAPI.getArtistInfo(artistName).execute()
+            val callResponse: Response<String> =  getArtistRequest().getArtistInfo(artistName).execute()
             Log.e("API", "JSON " + callResponse.body())
             val response = Gson().fromJson(callResponse.body(), JsonObject::class.java)
             val artist = response["artist"].getAsJsonObject()
             val artistBio = artist["bio"].getAsJsonObject()
             val contentBio = artistBio["content"]
             val artistUrl = artist["url"]
-            if (contentBio == null) { /* TODO: Esto deberia ponerlo en una funcion */
-                biographyTextAux = "No Results"
-            } else {
-                biographyTextAux = contentBio.asString.replace("\\n", "\n")
-                val textInHtml = textToHtml(biographyTextAux, artistName)
-
-                insertArticleInDatabase(artistName, textInHtml, artistUrl)
-            }
-            setOnClickListenerButton(artistUrl.asString)
+            contentBio?.let {
+                biographyTextAux = processBiography(biographyText, artistName, artistUrl.asString)
+            } ?: "No Results"
         } catch (ioException: IOException) {
             Log.e("TAG", "Error: $ioException")
             ioException.printStackTrace()
         }
         return biographyTextAux
+    }
+
+    private fun processBiography(biographyText: String, artistName: String, artistUrl: String): String {
+        val formattedBiography = biographyText.replace("\\n", "\n")
+        val textInHtml = textToHtml(formattedBiography, artistName)
+        insertArticleInDatabase(artistName, textInHtml, artistUrl)
+        setOnClickListenerButton(artistUrl)
+        return formattedBiography
     }
 
     private fun getArtistRequest(): ArtistAPIRequest {
@@ -133,7 +132,7 @@ class MoreDetails : Activity() {
     companion object {
         const val ARTIST_NAME_EXTRA = "artistName"
 
-        fun textToHtml(text: String, term: String?): String {
+        fun textToHtml(text: String, termToHighlight: String?): String {
             val stringBuilder = StringBuilder()
             stringBuilder.append("<html><div width=400>")
             stringBuilder.append("<font face=\"arial\">")
@@ -142,8 +141,8 @@ class MoreDetails : Activity() {
                 .replace("'", " ")
                 .replace("\n", "<br>")
                 .replace(
-                    "(?i)$term".toRegex(),
-                    "<b>" + term!!.uppercase(Locale.getDefault()) + "</b>"
+                    "(?i)$termToHighlight".toRegex(),
+                    "<b>" + termToHighlight!!.uppercase(Locale.getDefault()) + "</b>"
                 )
             stringBuilder.append(textWithBold)
             stringBuilder.append("</font></div></html>")

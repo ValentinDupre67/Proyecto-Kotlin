@@ -38,13 +38,13 @@ class MoreDetails : Activity() {
         textPanel = findViewById(R.id.textPanel)
         logoImageView = findViewById(R.id.imageView1);
         openUrlButton = findViewById(R.id.openUrlButton)
-        open(intent.getStringExtra("artistName"))
+        initializeArticleDatabase()
+        getArtistInfo(intent.getStringExtra("artistName"))
     }
 
-    private fun open(artist: String?) {
+    private fun initializeArticleDatabase() {
         articleDatabase =
             databaseBuilder(this, ArticleDatabase::class.java, "database-name-thename").build()
-        getArtistInfo(artist)
     }
 
     fun getArtistInfo(artistName: String?) {
@@ -63,10 +63,7 @@ class MoreDetails : Activity() {
         }.start()
     }
 
-    private fun getArtistFromService(
-        artistName: String,
-        biographyText: String
-    ): String {
+    private fun getArtistFromService(artistName: String,biographyText: String): String {
         val lastFMAPI = getArtistRequest()
         var biographyTextAux = biographyText
 

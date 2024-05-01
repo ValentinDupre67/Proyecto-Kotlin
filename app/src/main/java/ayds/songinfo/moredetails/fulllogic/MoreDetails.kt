@@ -21,51 +21,71 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.io.IOException
 import java.util.Locale
 
+private  val ARTICLE_BD_NAME = "database-name-thename"
+private val LASTFM_BASE_URL = "https://ws.audioscrobbler.com/2.0/"
+private val LASTFM_IMAGE_URL =
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
+
 class MoreDetails : Activity() {
-    private val imageUrl =
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
-    private val baseUrl =
-        "https://ws.audioscrobbler.com/2.0/"
     private var textPanel: TextView? = null
     private var articleDatabase: ArticleDatabase? = null
     private var openUrlButton: Button? = null
     private var logoImageView: ImageView? = null
+    private lateinit var artistAPIRequest : ArtistAPIRequest
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_info)
+        initViewProperties()
+        initializeArticleDatabase()
+        initArtistAPIRequest()
+        getArtistInfoAsync()
+    }
+
+    private fun initViewProperties() {
         textPanel = findViewById(R.id.textPanel)
         logoImageView = findViewById(R.id.imageView1);
         openUrlButton = findViewById(R.id.openUrlButton)
-        initializeArticleDatabase()
-        getArtistInfo(intent.getStringExtra("artistName"))
     }
 
     private fun initializeArticleDatabase() {
         articleDatabase =
-            databaseBuilder(this, ArticleDatabase::class.java, "database-name-thename").build()
+            databaseBuilder(this, ArticleDatabase::class.java, ARTICLE_BD_NAME).build()
     }
 
-    fun getArtistInfo(artistName: String?) {
-        Log.e("API", "artistName $artistName")
+    private fun initArtistAPIRequest() {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(LASTFM_BASE_URL)
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .build()
+
+        artistAPIRequest = retrofit.create(ArtistAPIRequest::class.java)
+    }
+
+    private fun getArtistInfoAsync() {
         Thread {
-            val article = articleDatabase!!.ArticleDao().getArticleByArtistName(artistName!!)
-            var biographyText = ""
-            if (article != null) {
-                biographyText = "[*]" + article.biography
-                val urlString = article.articleUrl
-                setOnClickListenerButton(urlString)
-            } else {
-                biographyText = getArtistFromService( artistName, biographyText)
-            }
-            updateViewItems(biographyText)
+            getArtistInfo()
         }.start()
     }
 
-    private fun getArtistFromService(artistName: String,biographyText: String): String {
+    fun getArtistInfo() {
+        val artistName = getArtistName()
+        val article = articleDatabase!!.ArticleDao().getArticleByArtistName(artistName!!)
+        var biographyText = ""
+        if (article != null) {
+            biographyText = "[*]" + article.biography
+            val urlString = article.articleUrl
+            setOnClickListenerButton(urlString)
+        } else {
+            biographyText = getArtistFromService( artistName, biographyText)
+        }
+        updateViewItems(biographyText)
+    }
+
+    private fun getArtistFromService(artistName: String, biographyText: String): String {
         var biographyTextAux = biographyText
         try {
-            val callResponse: Response<String> =  getArtistRequest().getArtistInfo(artistName).execute()
+            val callResponse: Response<String> =  artistAPIRequest.getArtistInfo(artistName).execute()
             Log.e("API", "JSON " + callResponse.body())
             val response = Gson().fromJson(callResponse.body(), JsonObject::class.java)
             val artist = response["artist"].getAsJsonObject()
@@ -90,32 +110,18 @@ class MoreDetails : Activity() {
         return formattedBiography
     }
 
-    private fun getArtistRequest(): ArtistAPIRequest {
-        val retrofit = getRetrofit()
-        val artistDao = retrofit.create(ArtistAPIRequest::class.java)
-        return artistDao
-    }
-
-    private fun getRetrofit(): Retrofit {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(baseUrl)
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .build()
-        return retrofit
-    }
-
     private fun updateViewItems(biographyText: String) {
         runOnUiThread {
-            Picasso.get().load(imageUrl).into(logoImageView)
+            Picasso.get().load(LASTFM_IMAGE_URL).into(logoImageView)
             textPanel!!.text = Html.fromHtml(biographyText)
         }
     }
 
-    private fun insertArticleInDatabase(artistName: String, textInHtml: String, artistUrl: JsonElement) {
+    private fun insertArticleInDatabase(artistName: String, textInHtml: String, artistUrl: String) {
         Thread {
             articleDatabase!!.ArticleDao().insertArticle(
                 ArticleEntity(
-                    artistName, textInHtml, artistUrl.asString
+                    artistName, textInHtml, artistUrl
                 )
             )
         }.start()
@@ -129,24 +135,25 @@ class MoreDetails : Activity() {
         }
     }
 
+    private fun textToHtml(text: String, term: String?): String {
+        val builder = StringBuilder()
+        builder.append("<html><div width=400>")
+        builder.append("<font face=\"arial\">")
+        val textWithBold = text
+            .replace("'", " ")
+            .replace("\n", "<br>")
+            .replace(
+                "(?i)$term".toRegex(),
+                "<b>" + term!!.uppercase(Locale.getDefault()) + "</b>"
+            )
+        builder.append(textWithBold)
+        builder.append("</font></div></html>")
+        return builder.toString()
+    }
+
+    private fun getArtistName() = intent.getStringExtra(ARTIST_NAME_EXTRA) ?: throw Exception("Missing artist name")
+
     companion object {
         const val ARTIST_NAME_EXTRA = "artistName"
-
-        fun textToHtml(text: String, termToHighlight: String?): String {
-            val stringBuilder = StringBuilder()
-            stringBuilder.append("<html><div width=400>")
-            stringBuilder.append("<font face=\"arial\">")
-            // TODO: Esto creo que debería hacerlo otra función
-            val textWithBold = text
-                .replace("'", " ")
-                .replace("\n", "<br>")
-                .replace(
-                    "(?i)$termToHighlight".toRegex(),
-                    "<b>" + termToHighlight!!.uppercase(Locale.getDefault()) + "</b>"
-                )
-            stringBuilder.append(textWithBold)
-            stringBuilder.append("</font></div></html>")
-            return stringBuilder.toString()
-        }
     }
 }

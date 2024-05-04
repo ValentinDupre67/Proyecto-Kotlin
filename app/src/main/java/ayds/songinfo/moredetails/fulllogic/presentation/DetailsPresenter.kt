@@ -5,8 +5,13 @@ interface DetailsPresenter {
     fun onViewCreated()
 }
 class DetailsPresenterImpl(private val view: DetailsView) : DetailsPresenter{
-    override fun onViewCreated() {
-        TODO("Not yet implemented")
-    }
 
+    override fun onViewCreated() {
+        val repository = RepositoryImpl()
+
+        val artistName = view.uiState.artistName
+        repository.getArticle(artistName) { articleEntity ->
+            view.updateUi(articleEntity)
+        }
+    }
 }

@@ -10,7 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.room.Room.databaseBuilder
 import ayds.songinfo.R
-import ayds.songinfo.moredetails.fulllogic.data.ArticleDatabase
+import ayds.songinfo.moredetails.fulllogic.data.repository.local.ArticleDatabase
 import ayds.songinfo.moredetails.fulllogic.data.repository.external.ArtistAPIRequest
 import ayds.songinfo.moredetails.fulllogic.data.repository.local.ArticleEntity
 import com.google.gson.Gson

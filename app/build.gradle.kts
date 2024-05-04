@@ -44,6 +44,7 @@ dependencies {
     implementation(libs.gson)
     implementation(libs.picasso)
     implementation(libs.androidx.room)
+    implementation(libs.constraintlayout)
 
     ksp(libs.androidx.room.compiler)
     testImplementation(libs.junit)

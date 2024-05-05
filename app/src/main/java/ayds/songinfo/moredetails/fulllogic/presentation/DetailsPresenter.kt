@@ -1,17 +1,15 @@
-import android.telecom.Call.Details
+import android.util.Log
+import ayds.songinfo.moredetails.fulllogic.data.repository.RepositoryImpl
 import ayds.songinfo.moredetails.fulllogic.presentation.DetailsView
 
 interface DetailsPresenter {
     fun onViewCreated()
 }
-class DetailsPresenterImpl(private val view: DetailsView) : DetailsPresenter{
+class DetailsPresenterImpl(private val view: DetailsView) : DetailsPresenter {
 
     override fun onViewCreated() {
-        val repository = RepositoryImpl()
-
+        val repository = RepositoryImpl(view.getContext())
         val artistName = view.uiState.artistName
-        repository.getArticle(artistName) { articleEntity ->
-            view.updateUi(articleEntity)
-        }
+        view.updateUi(repository.getArticle(artistName))
     }
 }

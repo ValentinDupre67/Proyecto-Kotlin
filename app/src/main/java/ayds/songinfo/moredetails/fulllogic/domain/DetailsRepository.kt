@@ -6,6 +6,5 @@ interface DetailsRepository {
      var artistAPIRequest : ArtistAPIRequest
      var articleDatabase: ArticleDatabase
 
-     fun initRepository()
      fun getArticle(artistName: String): ArticleEntity
 }

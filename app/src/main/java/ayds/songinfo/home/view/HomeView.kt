@@ -49,8 +49,8 @@ class HomeViewActivity : Activity(), HomeView {
     override var uiState: HomeUiState = HomeUiState()
 
     override fun navigateToOtherDetails(artistName: String) {
-        val intent = Intent(this, ayds.songinfo.moredetails.fulllogic.MoreDetails::class.java)
-        intent.putExtra(ayds.songinfo.moredetails.fulllogic.MoreDetails.ARTIST_NAME_EXTRA, artistName)
+        val intent = Intent(this, ayds.songinfo.moredetails.fulllogic.presentation.DetailsViewActivity::class.java)
+        intent.putExtra(ayds.songinfo.moredetails.fulllogic.presentation.DetailsViewActivity.ARTIST_NAME_EXTRA, artistName)
         startActivity(intent)
     }
 

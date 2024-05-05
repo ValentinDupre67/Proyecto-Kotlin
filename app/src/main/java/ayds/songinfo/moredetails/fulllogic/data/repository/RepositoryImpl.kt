@@ -1,6 +1,7 @@
 package ayds.songinfo.moredetails.fulllogic.data.repository
 import DetailsPresenter
 import DetailsRepository
+import android.content.Context
 import androidx.room.Room.databaseBuilder
 import ayds.songinfo.moredetails.fulllogic.data.repository.local.ArticleDatabase
 import ayds.songinfo.moredetails.fulllogic.data.repository.external.ArtistAPIRequest
@@ -14,18 +15,13 @@ import java.io.IOException
 private const val ARTICLE_BD_NAME = "database-name-thename"
 private const val LASTFM_BASE_URL = "https://ws.audioscrobbler.com/2.0/"
 
-class RepositoryImpl(private val presenter: DetailsPresenter): DetailsRepository {
+class RepositoryImpl(private val context: Context): DetailsRepository {
 
     override lateinit var artistAPIRequest : ArtistAPIRequest
     override lateinit var articleDatabase: ArticleDatabase
-    override fun initRepository() {
-        initializeArticleDatabase()
-        initArtistAPIRequest()
-    }
-
     private fun initializeArticleDatabase() {
         articleDatabase =
-            databaseBuilder(this, ArticleDatabase::class.java, ARTICLE_BD_NAME).build()
+            databaseBuilder(context, ArticleDatabase::class.java, ARTICLE_BD_NAME).build()
     }
 
     private fun initArtistAPIRequest() {
@@ -38,10 +34,12 @@ class RepositoryImpl(private val presenter: DetailsPresenter): DetailsRepository
     }
 
     override fun getArticle(artistName: String): ArticleEntity {
+        initializeArticleDatabase()
         val dbArticle = articleDatabase.ArticleDao().getArticleByArtistName(artistName)
         return if (dbArticle != null) {
             dbArticle.markItAsLocal()
         } else {
+            initArtistAPIRequest()
             val articleEntity = getArticleFromService(artistName)
             if (articleEntity.biography.isNotEmpty()) {
                 insertArticleIntoDB(articleEntity)
@@ -64,12 +62,10 @@ class RepositoryImpl(private val presenter: DetailsPresenter): DetailsRepository
     }
 
     private fun getArtistBioFromExternalData(serviceData: String?, artistName: String): ArticleEntity {
-
-            val gson = Gson()
-            val jobj = gson.fromJson(serviceData, JsonObject::class.java)
-
-            val artist = jobj["artist"].getAsJsonObject()
-            val bio = artist["bio"].getAsJsonObject()
+        val gson = Gson()
+        val jobj = gson.fromJson(serviceData, JsonObject::class.java)
+        val artist = jobj["artist"].getAsJsonObject()
+        val bio = artist["bio"].getAsJsonObject()
         val extract = bio["content"]
         val url = artist["url"]
         val text = extract?.asString ?: "No Results"
@@ -77,7 +73,8 @@ class RepositoryImpl(private val presenter: DetailsPresenter): DetailsRepository
         return ArticleEntity(artistName, text, url.asString)
     }
 
-    private fun getSongFromService(artistName: String) = artistAPIRequest.getArtistInfo(artistName).execute()
+    private fun getSongFromService(artistName: String) =
+        artistAPIRequest.getArtistInfo(artistName).execute()
 
     private fun insertArticleIntoDB(articleEntity: ArticleEntity) {
         articleDatabase.ArticleDao().insertArticle(articleEntity)

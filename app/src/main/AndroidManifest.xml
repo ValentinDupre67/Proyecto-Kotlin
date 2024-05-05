@@ -12,9 +12,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AydsSongInfo">
         <activity
-            android:name=".moredetails.fulllogic.presentation.DetailsView"
-            android:exported="false"/>
-        <activity
             android:name=".home.view.HomeViewActivity"
             android:exported="true">
             <intent-filter>
@@ -24,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".moredetails.fulllogic.MoreDetails"
+            android:name=".moredetails.fulllogic.presentation.DetailsViewActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
     </application>
 

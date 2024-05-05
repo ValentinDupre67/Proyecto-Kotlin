@@ -2,15 +2,18 @@ package ayds.songinfo.moredetails.fulllogic.presentation
 
 import DetailsPresenter
 import DetailsPresenterImpl
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Html
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import ayds.songinfo.R
+import ayds.songinfo.moredetails.fulllogic.MoreDetails
 import ayds.songinfo.moredetails.fulllogic.data.repository.local.ArticleEntity
 import com.squareup.picasso.Picasso
 import java.util.*
@@ -18,6 +21,7 @@ import java.util.*
 interface DetailsView {
     val uiState: DetailsUiState
     fun updateUi(articleEntity: ArticleEntity)
+    fun getContext(): Context
 }
 
 private const val LASTFM_IMAGE_URL =
@@ -51,6 +55,7 @@ class DetailsViewActivity : AppCompatActivity(), DetailsView{
 
     private fun getArtistInfoAsync() {
         Thread {
+            uiState.artistName = getArtistName()
             detailsPresenter.onViewCreated()
         }.start()
     }
@@ -61,6 +66,10 @@ class DetailsViewActivity : AppCompatActivity(), DetailsView{
             updateLastFMLogo()
             updateArticleText(articleEntity)
         }
+    }
+
+    override fun getContext(): Context {
+        return this
     }
 
     private fun updateOpenUrlButton(articleEntity: ArticleEntity) {
@@ -98,6 +107,14 @@ class DetailsViewActivity : AppCompatActivity(), DetailsView{
         builder.append(textWithBold)
         builder.append("</font></div></html>")
         return builder.toString()
+    }
+
+    private fun getArtistName() =
+        intent.getStringExtra(ARTIST_NAME_EXTRA) ?: throw Exception("Missing artist name")
+
+
+    companion object {
+        const val ARTIST_NAME_EXTRA = "artistName"
     }
 
 }

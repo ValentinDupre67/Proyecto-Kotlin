@@ -1,45 +1,24 @@
 package ayds.songinfo.moredetails.fulllogic.data.repository
-import DetailsPresenter
 import DetailsRepository
-import android.content.Context
-import androidx.room.Room.databaseBuilder
 import ayds.songinfo.moredetails.fulllogic.data.repository.local.ArticleDatabase
 import ayds.songinfo.moredetails.fulllogic.data.repository.external.ArtistAPIRequest
 import ayds.songinfo.moredetails.fulllogic.data.repository.local.ArticleEntity
 import com.google.gson.Gson
 import com.google.gson.JsonObject
-import retrofit2.Retrofit
-import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.io.IOException
 
-private const val ARTICLE_BD_NAME = "database-name-thename"
-private const val LASTFM_BASE_URL = "https://ws.audioscrobbler.com/2.0/"
-
-class RepositoryImpl(private val context: Context): DetailsRepository {
+class RepositoryImpl : DetailsRepository {
 
     override lateinit var artistAPIRequest : ArtistAPIRequest
     override lateinit var articleDatabase: ArticleDatabase
-    private fun initializeArticleDatabase() {
-        articleDatabase =
-            databaseBuilder(context, ArticleDatabase::class.java, ARTICLE_BD_NAME).build()
-    }
-
-    private fun initArtistAPIRequest() {
-        val retrofit = Retrofit.Builder()
-            .baseUrl(LASTFM_BASE_URL)
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .build()
-
-        artistAPIRequest = retrofit.create(ArtistAPIRequest::class.java)
-    }
 
     override fun getArticle(artistName: String): ArticleEntity {
-        initializeArticleDatabase()
+        articleDatabase = DetailsRepositoryInjector.getArticleDatabase()
         val dbArticle = articleDatabase.ArticleDao().getArticleByArtistName(artistName)
         return if (dbArticle != null) {
             dbArticle.markItAsLocal()
         } else {
-            initArtistAPIRequest()
+            artistAPIRequest = DetailsRepositoryInjector.getArtistAPIRequest()
             val articleEntity = getArticleFromService(artistName)
             if (articleEntity.biography.isNotEmpty()) {
                 insertArticleIntoDB(articleEntity)

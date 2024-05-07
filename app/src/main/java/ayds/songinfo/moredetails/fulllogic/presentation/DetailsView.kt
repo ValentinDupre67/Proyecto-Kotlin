@@ -22,6 +22,7 @@ interface DetailsView {
     val uiState: DetailsUiState
     fun updateUi(articleEntity: ArticleEntity)
     fun getContext(): Context
+    fun initModule()
 }
 
 private const val LASTFM_IMAGE_URL =
@@ -38,13 +39,14 @@ class DetailsViewActivity : AppCompatActivity(), DetailsView{
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_details_view)
 
+        initModule()
         initViewProperties()
-        initPresenter()
         getArtistInfoAsync()
     }
 
-    private fun initPresenter() {
-        detailsPresenter = DetailsPresenterImpl(this)
+    override fun initModule() {
+        DetailsViewInjector.init(this)
+        detailsPresenter = DetailsViewInjector.getDetailsPresenter()
     }
 
     private fun initViewProperties() {

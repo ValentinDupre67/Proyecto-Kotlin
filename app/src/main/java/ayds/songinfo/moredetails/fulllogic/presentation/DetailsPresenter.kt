@@ -1,4 +1,3 @@
-import android.util.Log
 import ayds.songinfo.moredetails.fulllogic.data.repository.RepositoryImpl
 import ayds.songinfo.moredetails.fulllogic.presentation.DetailsView
 

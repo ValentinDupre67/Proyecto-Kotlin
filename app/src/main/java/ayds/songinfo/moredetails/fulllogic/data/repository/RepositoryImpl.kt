@@ -1,11 +1,9 @@
 package ayds.songinfo.moredetails.fulllogic.data.repository
 import DetailsRepository
-import android.content.Context
 import ayds.songinfo.moredetails.fulllogic.data.repository.local.ArticleDatabase
 import ayds.songinfo.moredetails.fulllogic.data.repository.local.ArticleEntity
 
-
-class RepositoryImpl(context: Context) : DetailsRepository {
+class RepositoryImpl : DetailsRepository {
     override lateinit var articleDatabase: ArticleDatabase
     override fun getArticle(artistName: String): ArticleEntity {
         val dbArticle = DetailsRepositoryInjector.getLocalDataSource().getArticleByArtistName(artistName)

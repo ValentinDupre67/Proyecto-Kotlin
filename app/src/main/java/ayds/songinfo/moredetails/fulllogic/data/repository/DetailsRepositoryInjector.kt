@@ -37,8 +37,6 @@ object DetailsRepositoryInjector {
         artistAPIRequest = retrofit.create(ArtistAPIRequest::class.java)
     }
 
-    fun getArtistAPIRequest(): ArtistAPIRequest = artistAPIRequest
-
     fun getArticleDatabase(): ArticleDatabase = articleDatabase
 
     fun getRemoteDataSource(): RemoteDataSource {

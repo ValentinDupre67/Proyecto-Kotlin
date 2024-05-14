@@ -7,10 +7,11 @@ class RepositoryImpl : DetailsRepository {
     override lateinit var articleDatabase: ArticleDatabase
     override fun getArticle(artistName: String): ArticleEntity {
         val dbArticle = DetailsRepositoryInjector.getLocalDataSource().getArticleByArtistName(artistName)
+        val articleEntity: ArticleEntity
         return if (dbArticle != null) {
             dbArticle.markItAsLocal()
         } else {
-            val articleEntity = DetailsRepositoryInjector.getRemoteDataSource().getArticleByArtistName(artistName)
+            articleEntity = DetailsRepositoryInjector.getRemoteDataSource().getArticleByArtistName(artistName)
             if (articleEntity.biography.isNotEmpty()) {
                 insertArticleIntoDB(articleEntity)
             }

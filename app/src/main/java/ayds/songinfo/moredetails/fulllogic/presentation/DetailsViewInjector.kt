@@ -8,7 +8,9 @@ object DetailsViewInjector {
     private lateinit var detailsPresenter: DetailsPresenter
 
     fun init(detailsView: DetailsView) {
-        detailsPresenter = DetailsPresenterImpl(detailsView)
+        val detailsDescriptionHelper = DetailsDescriptionHelperImpl()
+
+        detailsPresenter = DetailsPresenterImpl(detailsDescriptionHelper)
         DetailsRepositoryInjector.initRepository(detailsView)
     }
 

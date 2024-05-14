@@ -1,32 +1,23 @@
 package ayds.songinfo.moredetails.fulllogic.presentation
 
 import DetailsPresenter
-import DetailsPresenterImpl
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Html
-import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import ayds.songinfo.R
-import ayds.songinfo.moredetails.fulllogic.MoreDetails
-import ayds.songinfo.moredetails.fulllogic.data.repository.local.ArticleEntity
 import com.squareup.picasso.Picasso
-import java.util.*
 
-interface DetailsView {
+interface DetailsView { /* TODO: Debemos eliminar la interfaz? Consultar */
     val uiState: DetailsUiState
-    fun updateUi(articleEntity: ArticleEntity)
-    fun getContext(): Context
+    fun updateUi(detailsUiState: DetailsUiState)
     fun initModule()
 }
 
-private const val LASTFM_IMAGE_URL =
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
 class DetailsViewActivity : AppCompatActivity(), DetailsView{
 
     private lateinit var textPanel: TextView
@@ -41,12 +32,20 @@ class DetailsViewActivity : AppCompatActivity(), DetailsView{
 
         initModule()
         initViewProperties()
+
+        observerPresenter()
         getArtistInfoAsync()
     }
 
     override fun initModule() {
         DetailsViewInjector.init(this)
         detailsPresenter = DetailsViewInjector.getDetailsPresenter()
+    }
+
+    private fun observerPresenter() {
+        detailsPresenter.detailsUiObservable.subscribe { detailsUiState ->
+            updateUi(detailsUiState)
+        }
     }
 
     private fun initViewProperties() {
@@ -57,26 +56,26 @@ class DetailsViewActivity : AppCompatActivity(), DetailsView{
 
     private fun getArtistInfoAsync() {
         Thread {
-            uiState.artistName = getArtistName()
-            detailsPresenter.onViewCreated()
+            getArtistInfo()
         }.start()
     }
 
-    override fun updateUi(articleEntity: ArticleEntity) {
+    private fun getArtistInfo() {
+        val artistName = getArtistName()
+        detailsPresenter.getArtistInfo(artistName)
+    }
+
+    override fun updateUi(detailsUiState: DetailsUiState) {
         runOnUiThread {
-            updateOpenUrlButton(articleEntity)
-            updateLastFMLogo()
-            updateArticleText(articleEntity)
+            updateOpenUrlButton(detailsUiState.articleUrl)
+            updateLastFMLogo(detailsUiState.imageUrl)
+            updateArticleText(detailsUiState.biography)
         }
     }
 
-    override fun getContext(): Context {
-        return this
-    }
-
-    private fun updateOpenUrlButton(articleEntity: ArticleEntity) {
+    private fun updateOpenUrlButton(articleUrl: String) {
         openUrlButton.setOnClickListener {
-            navigateToUrl(articleEntity.articleUrl)
+            navigateToUrl(articleUrl)
         }
     }
 
@@ -86,34 +85,16 @@ class DetailsViewActivity : AppCompatActivity(), DetailsView{
         startActivity(intent)
     }
 
-    private fun updateLastFMLogo() {
-        Picasso.get().load(LASTFM_IMAGE_URL).into(logoImageView)
+    private fun updateLastFMLogo(imageUrl: String) {
+        Picasso.get().load(imageUrl).into(logoImageView)
     }
 
-    private fun updateArticleText(articleEntity: ArticleEntity) {
-        val text = articleEntity.biography.replace("\\n", "\n")
-        textPanel.text = Html.fromHtml(textToHtml(text, articleEntity.artistName))
-    }
-
-    private fun textToHtml(text: String, term: String?): String { // TODO: Esto no estoy seguro que vaya en la view.
-        val builder = StringBuilder()
-        builder.append("<html><div width=400>")
-        builder.append("<font face=\"arial\">")
-        val textWithBold = text
-            .replace("'", " ")
-            .replace("\n", "<br>")
-            .replace(
-                "(?i)$term".toRegex(),
-                "<b>" + term!!.uppercase(Locale.getDefault()) + "</b>"
-            )
-        builder.append(textWithBold)
-        builder.append("</font></div></html>")
-        return builder.toString()
+    private fun updateArticleText(biography: String) {
+        textPanel.text = Html.fromHtml(biography)
     }
 
     private fun getArtistName() =
         intent.getStringExtra(ARTIST_NAME_EXTRA) ?: throw Exception("Missing artist name")
-
 
     companion object {
         const val ARTIST_NAME_EXTRA = "artistName"

@@ -2,6 +2,7 @@ import ayds.observer.Observable
 import ayds.observer.Subject
 import ayds.songinfo.moredetails.fulllogic.data.repository.RepositoryImpl
 import ayds.songinfo.moredetails.fulllogic.data.repository.local.ArticleEntity
+import ayds.songinfo.moredetails.fulllogic.domain.entity.ArtistDetails
 import ayds.songinfo.moredetails.fulllogic.presentation.DetailsDescriptionHelper
 import ayds.songinfo.moredetails.fulllogic.presentation.DetailsUiState
 
@@ -21,7 +22,7 @@ class DetailsPresenterImpl(
         detailsUiObservable.notify(uiState)
     }
 
-    private fun ArticleEntity.toUiState() = DetailsUiState( /* Esta parte no la entiendo bien. Consultar */
+    private fun ArtistDetails.toUiState() = DetailsUiState( /* Esta parte no la entiendo bien. Consultar */
         artistName,
         detailsDescriptionHelper.getDescription(this),
         articleUrl

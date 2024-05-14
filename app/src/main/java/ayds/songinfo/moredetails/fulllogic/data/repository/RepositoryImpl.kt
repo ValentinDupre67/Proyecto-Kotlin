@@ -2,27 +2,34 @@ package ayds.songinfo.moredetails.fulllogic.data.repository
 import DetailsRepository
 import ayds.songinfo.moredetails.fulllogic.data.repository.local.ArticleDatabase
 import ayds.songinfo.moredetails.fulllogic.data.repository.local.ArticleEntity
+import ayds.songinfo.moredetails.fulllogic.domain.entity.ArtistDetails
 
 class RepositoryImpl : DetailsRepository {
-    override lateinit var articleDatabase: ArticleDatabase
-    override fun getArticle(artistName: String): ArticleEntity {
+    override lateinit var articleDatabase: ArticleDatabase /* TODO: IMPORTANTE - HAY UN ERROR EN EL QUE ARTICLEDATABASE QUEDA COMO NO INICIALIZADO.*/
+    override fun getArticle(artistName: String): ArtistDetails {
         val dbArticle = DetailsRepositoryInjector.getLocalDataSource().getArticleByArtistName(artistName)
-        val articleEntity: ArticleEntity
-        return if (dbArticle != null) {
-            dbArticle.markItAsLocal()
+        val artistDetails: ArtistDetails
+        if (dbArticle != null) {
+            artistDetails = dbArticle.apply { markItAsLocal() }
         } else {
-            articleEntity = DetailsRepositoryInjector.getRemoteDataSource().getArticleByArtistName(artistName)
-            if (articleEntity.biography.isNotEmpty()) {
-                insertArticleIntoDB(articleEntity)
+            artistDetails = DetailsRepositoryInjector.getRemoteDataSource().getArticleByArtistName(artistName)
+            if (artistDetails.biography.isNotEmpty()) {
+                insertArticleIntoDB(artistDetails)
             }
-            articleEntity
         }
+        return artistDetails
     }
 
-    private fun ArticleEntity.markItAsLocal() = copy(biography = "[*]$biography")
+    private fun ArtistDetails.markItAsLocal() {
+        isLocallyStored = true
+    }
 
-    private fun insertArticleIntoDB(articleEntity: ArticleEntity) {
-        articleDatabase.ArticleDao().insertArticle(articleEntity)
+    private fun insertArticleIntoDB(artistDetails: ArtistDetails) {
+        articleDatabase.ArticleDao().insertArticle(
+            ArticleEntity(
+                artistDetails.artistName, artistDetails.biography, artistDetails.articleUrl
+            )
+        )
     }
 
 }

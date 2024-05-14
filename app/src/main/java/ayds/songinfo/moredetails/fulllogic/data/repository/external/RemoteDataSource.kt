@@ -1,22 +1,22 @@
 package ayds.songinfo.moredetails.fulllogic.data.repository.external
 
-import ayds.songinfo.moredetails.fulllogic.data.repository.local.ArticleEntity
+import ayds.songinfo.moredetails.fulllogic.domain.entity.ArtistDetails
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import java.io.IOException
 class RemoteDataSource (private val artistAPIRequest: ArtistAPIRequest){
-    fun getArticleByArtistName(artistName: String): ArticleEntity {
-        var articleEntity = ArticleEntity(artistName, "", "")
+    fun getArticleByArtistName(artistName: String): ArtistDetails {
+        var artistDetails = ArtistDetails(artistName, "", "")
         try {
             val callResponse = getSongFromService(artistName)
-            articleEntity = getArtistBioFromExternalData(callResponse.body(), artistName)
+            artistDetails = getArtistBioFromExternalData(callResponse.body(), artistName)
         } catch (e1: IOException) {
             e1.printStackTrace()
         }
-        return articleEntity
+        return artistDetails
     }
 
-    private fun getArtistBioFromExternalData(serviceData: String?, artistName: String): ArticleEntity {
+    private fun getArtistBioFromExternalData(serviceData: String?, artistName: String): ArtistDetails {
         val gson = Gson()
         val jobj = gson.fromJson(serviceData, JsonObject::class.java)
         val artist = jobj["artist"].getAsJsonObject()
@@ -25,7 +25,7 @@ class RemoteDataSource (private val artistAPIRequest: ArtistAPIRequest){
         val url = artist["url"]
         val text = extract?.asString ?: "No Results"
 
-        return ArticleEntity(artistName, text, url.asString)
+        return ArtistDetails(artistName, text, url.asString)
     }
 
     private fun getSongFromService(artistName: String) =

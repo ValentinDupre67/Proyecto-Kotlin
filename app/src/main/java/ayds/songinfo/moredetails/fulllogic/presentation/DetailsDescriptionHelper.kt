@@ -1,26 +1,25 @@
 package ayds.songinfo.moredetails.fulllogic.presentation
 
-import ayds.songinfo.moredetails.fulllogic.data.repository.local.ArticleEntity
-import retrofit2.http.HEAD
+import ayds.songinfo.moredetails.fulllogic.domain.entity.ArtistDetails
 import java.util.Locale
 
 interface DetailsDescriptionHelper {
-    fun getDescription(articleEntity: ArticleEntity): String
+    fun getDescription(artistDetails: ArtistDetails): String
 
 }
 
 private const val HEADER = "<html><div width=400><font face=\"arial\">"
 private const val FOOTER = "</font></div></html>"
 internal class DetailsDescriptionHelperImpl: DetailsDescriptionHelper {
-    override fun getDescription(articleEntity: ArticleEntity): String {
-        val text = getTextBiography(articleEntity)
-        return textToHtml(text, articleEntity.artistName)
+    override fun getDescription(artistDetails: ArtistDetails): String {
+        val text = getTextBiography(artistDetails)
+        return textToHtml(text, artistDetails.artistName)
     }
 
-    private fun getTextBiography(articleEntity: ArticleEntity): String {
-        //val prefix = if (artistBiography.isLocallyStored) "[*]" else ""
-        // TODO: Para incluir esta linea deberiamos sacar una parte de la implementación de Repository
-        return articleEntity.biography.replace("\\n", "\n")
+    private fun getTextBiography(artistDetails: ArtistDetails): String {
+        val prefix = if (artistDetails.isLocallyStored) "[*]" else ""
+        val text = artistDetails.biography.replace("\\n", "\n")
+        return "$prefix$text"
     }
 
     private fun textToHtml(text: String, term: String?): String {

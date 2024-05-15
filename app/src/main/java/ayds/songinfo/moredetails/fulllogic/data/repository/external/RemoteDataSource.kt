@@ -4,6 +4,8 @@ import ayds.songinfo.moredetails.fulllogic.domain.entity.ArtistDetails
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import java.io.IOException
+
+
 class RemoteDataSource (private val artistAPIRequest: ArtistAPIRequest){
     fun getArticleByArtistName(artistName: String): ArtistDetails {
         var artistDetails = ArtistDetails(artistName, "", "")

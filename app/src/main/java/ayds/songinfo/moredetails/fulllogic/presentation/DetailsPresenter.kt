@@ -9,13 +9,13 @@ interface DetailsPresenter {
     val detailsUiObservable: Observable<DetailsUiState>
     fun getArtistInfo(artistName: String)
 }
-class DetailsPresenterImpl(
-        private val detailsDescriptionHelper: DetailsDescriptionHelper
-    ) : DetailsPresenter {
+internal class DetailsPresenterImpl(
+    private val detailsDescriptionHelper: DetailsDescriptionHelper,
+    private val repository: RepositoryImpl
+) : DetailsPresenter {
 
     override val detailsUiObservable = Subject<DetailsUiState>()
     override fun getArtistInfo(artistName : String) {
-        val repository = RepositoryImpl()
         val uiState = repository.getArtist(artistName).toUiState()
 
         detailsUiObservable.notify(uiState)

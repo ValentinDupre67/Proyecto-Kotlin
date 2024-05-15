@@ -11,7 +11,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
 private const val ARTICLE_BD_NAME = "database-name-thename"
-private const val LASTFM_BASE_URL = "https://ws.audioscrobbler.com/2.0/"
+internal const val LASTFM_BASE_URL = "https://ws.audioscrobbler.com/2.0/"
 
 object DetailsRepositoryInjector {
 

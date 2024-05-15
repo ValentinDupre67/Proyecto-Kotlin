@@ -5,7 +5,7 @@ import ayds.songinfo.moredetails.fulllogic.data.repository.local.LocalDataSource
 import ayds.songinfo.moredetails.fulllogic.domain.entity.ArtistDetails
 
 internal class RepositoryImpl(
-    private val localDataSource: LocalDataSource, 
+    private val localDataSource: LocalDataSource,
     private val remoteDataSource : RemoteDataSource
 ) : DetailsRepository {
     override fun getArtist(artistName: String): ArtistDetails {

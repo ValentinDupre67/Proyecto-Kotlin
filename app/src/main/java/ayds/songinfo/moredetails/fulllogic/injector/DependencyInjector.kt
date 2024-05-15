@@ -29,7 +29,7 @@ object DependencyInjector {
             ArticleDatabase::class.java,
             ARTICLE_BD_NAME
         ).build()
-        val articleLocalStorage = LocalDataSourceImpl(articleDatabase) //TODO esto esta bien ¿por que no usa la interface?
+        val articleLocalStorage = LocalDataSourceImpl(articleDatabase) //TODO esto esta bien? ¿por que no usa la interface?
 
         val retrofit = Retrofit.Builder()
             .baseUrl(LASTFM_BASE_URL)
@@ -42,7 +42,6 @@ object DependencyInjector {
         val repository = RepositoryImpl(articleLocalStorage, remoteDataSource)
 
         detailsPresenter = DetailsPresenterImpl(detailsDescriptionHelper, repository)
-        //DetailsRepositoryInjector.initRepository(context) //TODO se tendria que sacar
     }
 
     fun getDetailsPresenter() : DetailsPresenter = detailsPresenter

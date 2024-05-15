@@ -18,14 +18,14 @@ object DetailsRepositoryInjector {
     private lateinit var artistAPIRequest : ArtistAPIRequest
     private lateinit var articleDatabase: ArticleDatabase
 
-    fun initRepository(detailsView: DetailsView) {
-        initializeArticleDatabase(detailsView)
+    fun initRepository(context: Context) {
+        initializeArticleDatabase(context)
         initArtistAPIRequest()
     }
 
-    private fun initializeArticleDatabase(detailsView: DetailsView) {
+    private fun initializeArticleDatabase(context: Context) {
         articleDatabase =
-            Room.databaseBuilder(detailsView as Context, ArticleDatabase::class.java, ARTICLE_BD_NAME).build()
+            Room.databaseBuilder(context, ArticleDatabase::class.java, ARTICLE_BD_NAME).build()
     }
 
     private fun initArtistAPIRequest() {
@@ -41,9 +41,5 @@ object DetailsRepositoryInjector {
 
     fun getRemoteDataSource(): RemoteDataSource {
         return RemoteDataSource(artistAPIRequest)
-    }
-
-    fun getLocalDataSource(): LocalDataSource {
-        return LocalDataSource(getArticleDatabase())
     }
 }

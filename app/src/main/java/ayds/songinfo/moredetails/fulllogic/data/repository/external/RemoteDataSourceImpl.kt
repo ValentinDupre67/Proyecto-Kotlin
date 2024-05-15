@@ -5,9 +5,12 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import java.io.IOException
 
+interface RemoteDataSource {
+    fun getArticleByArtistName(artistName: String): ArtistDetails
+}
 
-class RemoteDataSource (private val artistAPIRequest: ArtistAPIRequest){
-    fun getArticleByArtistName(artistName: String): ArtistDetails {
+internal class RemoteDataSourceImpl (private val artistAPIRequest: ArtistAPIRequest): RemoteDataSource{
+    override fun getArticleByArtistName(artistName: String): ArtistDetails {
         var artistDetails = ArtistDetails(artistName, "", "")
         try {
             val callResponse = getSongFromService(artistName)

@@ -1,15 +1,5 @@
 package ayds.songinfo.moredetails.fulllogic.data.repository
 
-import android.content.Context
-import androidx.room.Room
-import ayds.songinfo.moredetails.fulllogic.data.repository.external.ArtistAPIRequest
-import ayds.songinfo.moredetails.fulllogic.data.repository.external.RemoteDataSource
-import ayds.songinfo.moredetails.fulllogic.data.repository.local.ArticleDatabase
-import ayds.songinfo.moredetails.fulllogic.data.repository.local.LocalDataSource
-import ayds.songinfo.moredetails.fulllogic.presentation.DetailsView
-import retrofit2.Retrofit
-import retrofit2.converter.scalars.ScalarsConverterFactory
-
 /*
 private const val ARTICLE_BD_NAME = "database-name-thename"
 internal const val LASTFM_BASE_URL = "https://ws.audioscrobbler.com/2.0/"

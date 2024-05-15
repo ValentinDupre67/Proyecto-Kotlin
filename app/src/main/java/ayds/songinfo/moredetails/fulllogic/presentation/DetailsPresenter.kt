@@ -1,3 +1,4 @@
+import android.util.Log
 import ayds.observer.Observable
 import ayds.observer.Subject
 import ayds.songinfo.moredetails.fulllogic.data.repository.RepositoryImpl
@@ -11,7 +12,7 @@ interface DetailsPresenter {
 }
 internal class DetailsPresenterImpl(
     private val detailsDescriptionHelper: DetailsDescriptionHelper,
-    private val repository: RepositoryImpl
+    private val repository: DetailsRepository
 ) : DetailsPresenter {
 
     override val detailsUiObservable = Subject<DetailsUiState>()
@@ -21,7 +22,7 @@ internal class DetailsPresenterImpl(
         detailsUiObservable.notify(uiState)
     }
 
-    private fun ArtistDetails.toUiState() = DetailsUiState( /* Esta parte no la entiendo bien. Consultar */
+    private fun ArtistDetails.toUiState() = DetailsUiState(
         artistName,
         detailsDescriptionHelper.getDescription(this),
         articleUrl

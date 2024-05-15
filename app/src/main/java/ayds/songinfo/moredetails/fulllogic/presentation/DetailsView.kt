@@ -13,19 +13,14 @@ import ayds.songinfo.R
 import ayds.songinfo.moredetails.fulllogic.injector.DependencyInjector
 import com.squareup.picasso.Picasso
 
-interface DetailsView { /* TODO: Debemos eliminar la interfaz? Consultar */
-    val uiState: DetailsUiState
-    fun updateUi(detailsUiState: DetailsUiState)
-    fun initModule()
-}
 
-class DetailsViewActivity : AppCompatActivity(), DetailsView{
+class DetailsViewActivity : AppCompatActivity() {
 
     private lateinit var textPanel: TextView
     private lateinit var openUrlButton: Button
     private lateinit var logoImageView: ImageView
+
     private lateinit var detailsPresenter: DetailsPresenter
-    override var uiState: DetailsUiState = DetailsUiState()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +33,7 @@ class DetailsViewActivity : AppCompatActivity(), DetailsView{
         getArtistInfoAsync()
     }
 
-    override fun initModule() {
+    private fun initModule() {
         DependencyInjector.init(this)
         detailsPresenter = DependencyInjector.getDetailsPresenter()
     }
@@ -66,7 +61,7 @@ class DetailsViewActivity : AppCompatActivity(), DetailsView{
         detailsPresenter.getArtistInfo(artistName)
     }
 
-    override fun updateUi(detailsUiState: DetailsUiState) {
+    private fun updateUi(detailsUiState: DetailsUiState) {
         runOnUiThread {
             updateOpenUrlButton(detailsUiState.articleUrl)
             updateLastFMLogo(detailsUiState.imageUrl)

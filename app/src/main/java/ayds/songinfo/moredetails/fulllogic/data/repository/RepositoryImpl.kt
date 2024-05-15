@@ -7,7 +7,7 @@ import ayds.songinfo.moredetails.fulllogic.domain.entity.ArtistDetails
 internal class RepositoryImpl(
     private val localDataSource: LocalDataSource, 
     private val remoteDataSource : RemoteDataSource
-) : DetailsRepository { //TODO preguntar por internal class
+) : DetailsRepository {
     override fun getArtist(artistName: String): ArtistDetails {
         val dbArticle = localDataSource.getArticleByArtistName(artistName)
         val artistDetails: ArtistDetails

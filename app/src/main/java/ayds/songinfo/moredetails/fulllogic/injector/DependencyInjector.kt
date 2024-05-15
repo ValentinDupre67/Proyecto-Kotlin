@@ -1,28 +1,33 @@
-package ayds.songinfo.moredetails.fulllogic.presentation
+package ayds.songinfo.moredetails.fulllogic.injector
 
 import DetailsPresenter
 import DetailsPresenterImpl
 import android.content.Context
 import androidx.room.Room
-import ayds.songinfo.moredetails.fulllogic.data.repository.DetailsRepositoryInjector
 import ayds.songinfo.moredetails.fulllogic.data.repository.RepositoryImpl
 import ayds.songinfo.moredetails.fulllogic.data.repository.external.ArtistAPIRequest
 import ayds.songinfo.moredetails.fulllogic.data.repository.external.RemoteDataSource
 import ayds.songinfo.moredetails.fulllogic.data.repository.local.ArticleDatabase
 import ayds.songinfo.moredetails.fulllogic.data.repository.local.LocalDataSourceImpl
+import ayds.songinfo.moredetails.fulllogic.presentation.DetailsDescriptionHelperImpl
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
 private const val ARTICLE_BD_NAME = "database-name-thename"
 private const val LASTFM_BASE_URL = "https://ws.audioscrobbler.com/2.0/"
 
-object DetailsViewInjector {
+
+object DependencyInjector {
     private lateinit var detailsPresenter: DetailsPresenter
 
     fun init(context: Context) {
         val detailsDescriptionHelper = DetailsDescriptionHelperImpl()
 
-        val articleDatabase = Room.databaseBuilder(context, ArticleDatabase::class.java, ARTICLE_BD_NAME).build()
+        val articleDatabase = Room.databaseBuilder(
+            context,
+            ArticleDatabase::class.java,
+            ARTICLE_BD_NAME
+        ).build()
         val articleLocalStorage = LocalDataSourceImpl(articleDatabase)
 
         val retrofit = Retrofit.Builder()
@@ -35,10 +40,8 @@ object DetailsViewInjector {
 
         val repository = RepositoryImpl(articleLocalStorage, remoteDataSource)
 
-
-
-        detailsPresenter = DetailsPresenterImpl(detailsDescriptionHelper,repository)
-        DetailsRepositoryInjector.initRepository(context)
+        detailsPresenter = DetailsPresenterImpl(detailsDescriptionHelper, repository)
+        //DetailsRepositoryInjector.initRepository(context) //TODO se tendria que sacar
     }
 
     fun getDetailsPresenter() : DetailsPresenter = detailsPresenter

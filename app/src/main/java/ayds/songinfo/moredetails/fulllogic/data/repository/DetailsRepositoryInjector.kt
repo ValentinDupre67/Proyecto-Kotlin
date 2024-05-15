@@ -10,11 +10,13 @@ import ayds.songinfo.moredetails.fulllogic.presentation.DetailsView
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
+/*
 private const val ARTICLE_BD_NAME = "database-name-thename"
 internal const val LASTFM_BASE_URL = "https://ws.audioscrobbler.com/2.0/"
+*/
 
 object DetailsRepositoryInjector {
-
+/*
     private lateinit var artistAPIRequest : ArtistAPIRequest
     private lateinit var articleDatabase: ArticleDatabase
 
@@ -42,4 +44,5 @@ object DetailsRepositoryInjector {
     fun getRemoteDataSource(): RemoteDataSource {
         return RemoteDataSource(artistAPIRequest)
     }
+    */
 }

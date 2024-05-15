@@ -14,7 +14,7 @@ internal class RepositoryImpl(
         if (dbArticle != null) {
             artistDetails = dbArticle.apply { markItAsLocal() }
         } else {
-            artistDetails = DetailsRepositoryInjector.getRemoteDataSource().getArticleByArtistName(artistName)
+            artistDetails = remoteDataSource.getArticleByArtistName(artistName)
             if (artistDetails.biography.isNotEmpty()) {
                 localDataSource.insertArtist(artistDetails)
             }

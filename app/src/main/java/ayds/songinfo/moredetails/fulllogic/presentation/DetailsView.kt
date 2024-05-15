@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import ayds.songinfo.R
+import ayds.songinfo.moredetails.fulllogic.injector.DependencyInjector
 import com.squareup.picasso.Picasso
 
 interface DetailsView { /* TODO: Debemos eliminar la interfaz? Consultar */
@@ -38,8 +39,8 @@ class DetailsViewActivity : AppCompatActivity(), DetailsView{
     }
 
     override fun initModule() {
-        DetailsViewInjector.init(this)
-        detailsPresenter = DetailsViewInjector.getDetailsPresenter()
+        DependencyInjector.init(this)
+        detailsPresenter = DependencyInjector.getDetailsPresenter()
     }
 
     private fun observerPresenter() {

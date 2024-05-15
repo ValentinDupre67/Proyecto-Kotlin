@@ -1,7 +1,6 @@
 import ayds.observer.Observable
 import ayds.observer.Subject
 import ayds.songinfo.moredetails.fulllogic.data.repository.RepositoryImpl
-import ayds.songinfo.moredetails.fulllogic.data.repository.local.ArticleEntity
 import ayds.songinfo.moredetails.fulllogic.domain.entity.ArtistDetails
 import ayds.songinfo.moredetails.fulllogic.presentation.DetailsDescriptionHelper
 import ayds.songinfo.moredetails.fulllogic.presentation.DetailsUiState
@@ -17,7 +16,7 @@ class DetailsPresenterImpl(
     override val detailsUiObservable = Subject<DetailsUiState>()
     override fun getArtistInfo(artistName : String) {
         val repository = RepositoryImpl()
-        val uiState = repository.getArticle(artistName).toUiState()
+        val uiState = repository.getArtist(artistName).toUiState()
 
         detailsUiObservable.notify(uiState)
     }

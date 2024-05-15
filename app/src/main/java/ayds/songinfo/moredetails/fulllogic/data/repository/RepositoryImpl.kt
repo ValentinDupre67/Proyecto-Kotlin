@@ -6,7 +6,7 @@ import ayds.songinfo.moredetails.fulllogic.domain.entity.ArtistDetails
 
 class RepositoryImpl : DetailsRepository {
     override lateinit var articleDatabase: ArticleDatabase /* TODO: IMPORTANTE - HAY UN ERROR EN EL QUE ARTICLEDATABASE QUEDA COMO NO INICIALIZADO.*/
-    override fun getArticle(artistName: String): ArtistDetails {
+    override fun getArtist(artistName: String): ArtistDetails {
         val dbArticle = DetailsRepositoryInjector.getLocalDataSource().getArticleByArtistName(artistName)
         val artistDetails: ArtistDetails
         if (dbArticle != null) {

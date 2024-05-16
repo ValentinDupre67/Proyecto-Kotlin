@@ -34,7 +34,6 @@ android {
 }
 
 dependencies {
-
     implementation(project(":observer"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -46,8 +45,12 @@ dependencies {
     implementation(libs.androidx.room)
     implementation(libs.constraintlayout)
 
-    ksp(libs.androidx.room.compiler)
-    testImplementation(libs.junit)
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
+
+    testImplementation(libs.mockk)
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }
+

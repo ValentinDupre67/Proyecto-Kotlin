@@ -1,7 +1,5 @@
-import android.util.Log
 import ayds.observer.Observable
 import ayds.observer.Subject
-import ayds.songinfo.moredetails.fulllogic.data.repository.RepositoryImpl
 import ayds.songinfo.moredetails.fulllogic.domain.entity.ArtistDetails
 import ayds.songinfo.moredetails.fulllogic.presentation.DetailsDescriptionHelper
 import ayds.songinfo.moredetails.fulllogic.presentation.DetailsUiState

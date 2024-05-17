@@ -3,8 +3,9 @@ package ayds.songinfo.moredetails.fulllogic.presentation
 import ayds.songinfo.moredetails.fulllogic.domain.entity.ArtistDetails
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
+import org.junit.Assert.assertEquals
+import org.junit.Test
+
 class DetailsDescriptionHelperImplTest {
 
     private val detailsDescriptionHelper: DetailsDescriptionHelper = DetailsDescriptionHelperImpl()

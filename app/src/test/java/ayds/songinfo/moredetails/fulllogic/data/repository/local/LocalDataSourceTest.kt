@@ -45,7 +45,7 @@ class LocalDataSourceTest{
     }
 
     @Test
-    fun `when  a method isertArtist, insert a valida articleEntity`(){
+    fun `when a method isertArtist, insert a valid ArtistDetails and the method getArticleByArtistName return a ArtistDetails previously inserted by isertArtist`(){
         val articleEntityTest = ArticleEntity(
             "pedroMockk",
             "this's a biography of pedroMockk",

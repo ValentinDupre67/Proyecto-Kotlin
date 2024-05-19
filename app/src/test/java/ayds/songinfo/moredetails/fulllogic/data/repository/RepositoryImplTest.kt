@@ -21,23 +21,23 @@ class RepositoryImplTest{
     private val localDataSource : LocalDataSource = mockk(relaxUnitFun = true)
     private val remoteDataSource : RemoteDataSource = mockk(relaxUnitFun = true)
     private val repository : DetailsRepository = RepositoryImpl(localDataSource, remoteDataSource)
+    private val artistName = "nameMockk"
 
     @Test
     fun `when localDataSource return a artisDetail and mark it as local`() {
         //¿Porque no puede ser? ----> val artisDetailsTest : ArtistDetails = mockk()
-        val artisDetailsTest = ArtistDetails(
+        val artistDetailsTest = ArtistDetails(
             "nameMockk",
             "biographyMockk",
             "http/mockk.com",
             isLocallyStored = false
         )
-        every { localDataSource.getArticleByArtistName("nameMockk") } returns artisDetailsTest;
+        every { localDataSource.getArticleByArtistName(artistName) } returns artistDetailsTest;
 
-        val result = repository.getArtist("nameMockk")
+        val result = repository.getArtist(artistName)
 
-        assertEquals(result,artisDetailsTest)
-        assertTrue(artisDetailsTest.isLocallyStored)
-
+        assertEquals(result,artistDetailsTest)
+        assertTrue(artistDetailsTest.isLocallyStored)
     }
 
     @Test
@@ -48,15 +48,14 @@ class RepositoryImplTest{
             "http/mockk.com",
             isLocallyStored = false
         )
-        every { localDataSource.getArticleByArtistName("nameMockk") } returns null;
-        every {remoteDataSource.getArticleByArtistName("nameMockk")} returns artisDetailsTest;
+        every { localDataSource.getArticleByArtistName(artistName) } returns null;
+        every {remoteDataSource.getArticleByArtistName(artistName)} returns artisDetailsTest;
+
+        val result = repository.getArtist(artistName)
 
         assertFalse(artisDetailsTest.biography.isNotEmpty())
-        verify(exactly = 0) { localDataSource.insertArtist(artisDetailsTest) }
-
-        val result = repository.getArtist("nameMockk")
-
         assertEquals(result,artisDetailsTest)
+        verify(exactly = 0) { localDataSource.insertArtist(artisDetailsTest) }
     }
     @Test
     fun `when localDataSource return a null, search in remote data source and insert artisDetails in localDataSource `() {
@@ -68,15 +67,15 @@ class RepositoryImplTest{
             isLocallyStored = false
         );
 
-        every { localDataSource.getArticleByArtistName("nameMockk") } returns null;
-        every {remoteDataSource.getArticleByArtistName("nameMockk")} returns artisDetailsTest;
+        every { localDataSource.getArticleByArtistName(artistName) } returns null;
+        every {remoteDataSource.getArticleByArtistName(artistName)} returns artisDetailsTest;
+        //verify { localDataSource.insertArtist(any()) } ¿por que si lo pongo aca no pasa el test??
+
+        val result = repository.getArtist(artistName)
 
         assertTrue(artisDetailsTest.biography.isNotEmpty())
-        //verify { localDataSource.insertArtist(any()) } ¿por que si lo pongo aca no pasa el test?
-
-        val result = repository.getArtist("nameMockk")
         assertEquals(result,artisDetailsTest)
-        verify { localDataSource.insertArtist(any()) }
+        verify(exactly = 1) { localDataSource.insertArtist(any()) }
     }
 
 

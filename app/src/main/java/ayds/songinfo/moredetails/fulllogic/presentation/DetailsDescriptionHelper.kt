@@ -1,24 +1,24 @@
 package ayds.songinfo.moredetails.fulllogic.presentation
 
-import ayds.songinfo.moredetails.fulllogic.domain.entity.ArtistDetails
+import ayds.songinfo.moredetails.fulllogic.domain.entity.Card
 import java.util.Locale
 
 interface DetailsDescriptionHelper {
-    fun getDescription(artistDetails: ArtistDetails): String
+    fun getDescription(card: Card): String
 
 }
 
 private const val HEADER = "<html><div width=400><font face=\"arial\">"
 private const val FOOTER = "</font></div></html>"
 internal class DetailsDescriptionHelperImpl: DetailsDescriptionHelper {
-    override fun getDescription(artistDetails: ArtistDetails): String {
-        val text = getTextBiography(artistDetails)
-        return textToHtml(text, artistDetails.artistName)
+    override fun getDescription(card: Card): String {
+        val text = getTextBiography(card)
+        return textToHtml(text, card.artistName)
     }
 
-    private fun getTextBiography(artistDetails: ArtistDetails): String {
-        val prefix = if (artistDetails.isLocallyStored) "[*]" else ""
-        val text = artistDetails.biography.replace("\\n", "\n") //TODO smell, no es bueno tener la lógica repartida 
+    private fun getTextBiography(card: Card): String {
+        val prefix = if (card.isLocallyStored) "[*]" else ""
+        val text = card.biography.replace("\\n", "\n") //TODO smell, no es bueno tener la lógica repartida
         return "$prefix$text"
     }
 

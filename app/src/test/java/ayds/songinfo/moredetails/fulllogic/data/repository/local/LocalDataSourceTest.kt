@@ -1,6 +1,6 @@
 package ayds.songinfo.moredetails.fulllogic.data.repository.local
 
-import ayds.songinfo.moredetails.fulllogic.domain.entity.ArtistDetails
+import ayds.songinfo.moredetails.fulllogic.domain.entity.Card
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
@@ -30,7 +30,7 @@ class LocalDataSourceTest{
             "this's a biography",
             "url of nameMockk"
         )
-        val artistDetailsTest = ArtistDetails(
+        val cardTest = Card(
             "nameMockk",
             "this's a biography",
             "url of nameMockk",
@@ -41,7 +41,7 @@ class LocalDataSourceTest{
         val result = localDataSource.getArticleByArtistName(artistName)
 
         assertNotNull(articleEntityTest)
-        assertEquals(result,artistDetailsTest)
+        assertEquals(result,cardTest)
     }
 
     @Test
@@ -54,7 +54,7 @@ class LocalDataSourceTest{
         every { articleDatabase.ArticleDao().insertArticle(articleEntityTest) } just Runs
         every { articleDatabase.ArticleDao().getArticleByArtistName("pedroMockk") } returns articleEntityTest
 
-        localDataSource.insertArtist(ArtistDetails(
+        localDataSource.insertArtist(Card(
             artistName = "pedroMockk",
             biography = "this's a biography of pedroMockk",
             articleUrl = "url of pedroMockk"

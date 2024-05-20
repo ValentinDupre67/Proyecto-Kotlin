@@ -1,6 +1,6 @@
 import ayds.observer.Observable
 import ayds.observer.Subject
-import ayds.songinfo.moredetails.fulllogic.domain.entity.ArtistDetails
+import ayds.songinfo.moredetails.fulllogic.domain.entity.Card
 import ayds.songinfo.moredetails.fulllogic.presentation.DetailsDescriptionHelper
 import ayds.songinfo.moredetails.fulllogic.presentation.DetailsUiState
 
@@ -20,7 +20,7 @@ internal class DetailsPresenterImpl(
         detailsUiObservable.notify(uiState)
     }
 
-    private fun ArtistDetails.toUiState() = DetailsUiState(
+    private fun Card.toUiState() = DetailsUiState(
         artistName,
         detailsDescriptionHelper.getDescription(this),
         articleUrl

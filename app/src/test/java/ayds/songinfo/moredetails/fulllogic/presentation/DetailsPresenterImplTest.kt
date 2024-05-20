@@ -3,7 +3,7 @@ package ayds.songinfo.moredetails.fulllogic.presentation
 import DetailsPresenter
 import DetailsPresenterImpl
 import DetailsRepository
-import ayds.songinfo.moredetails.fulllogic.domain.entity.ArtistDetails
+import ayds.songinfo.moredetails.fulllogic.domain.entity.Card
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -21,7 +21,7 @@ class DetailsPresenterImplTest {
         val artistName = "The Beatles"
         val articleUrl = "http://thebeatles.com"
         val biography = "Description for The Beatles"
-        val artistDetails = ArtistDetails(
+        val card = Card(
             artistName = artistName,
             biography = "The Beatles were an English rock band.",
             articleUrl = articleUrl,
@@ -33,8 +33,8 @@ class DetailsPresenterImplTest {
             articleUrl = articleUrl
         )
 
-        every { detailsDescriptionHelper.getDescription(artistDetails) } returns biography
-        every { repository.getArtist(artistName) } returns artistDetails
+        every { detailsDescriptionHelper.getDescription(card) } returns biography
+        every { repository.getArtist(artistName) } returns card
 
         val uiStateTester: (DetailsUiState) -> Unit = mockk(relaxed = true)
         detailsPresenter.detailsUiObservable.subscribe {

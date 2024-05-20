@@ -1,6 +1,5 @@
-import ayds.songinfo.moredetails.fulllogic.data.repository.local.ArticleDatabase
-import ayds.songinfo.moredetails.fulllogic.domain.entity.ArtistDetails
+import ayds.songinfo.moredetails.fulllogic.domain.entity.Card
 
 interface DetailsRepository {
-     fun getArtist(artistName: String): ArtistDetails
+     fun getArtist(artistName: String): Card
 }

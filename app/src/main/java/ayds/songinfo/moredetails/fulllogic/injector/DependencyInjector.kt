@@ -4,18 +4,14 @@ import DetailsPresenter
 import DetailsPresenterImpl
 import android.content.Context
 import androidx.room.Room
+import ayds.artist.external.lastfm.LastFMInjector
 import ayds.songinfo.moredetails.fulllogic.data.repository.RepositoryImpl
-import ayds.songinfo.moredetails.fulllogic.data.repository.external.ArtistAPIRequest
-import ayds.songinfo.moredetails.fulllogic.data.repository.external.RemoteDataSource
-import ayds.songinfo.moredetails.fulllogic.data.repository.external.RemoteDataSourceImpl
 import ayds.songinfo.moredetails.fulllogic.data.repository.local.ArticleDatabase
 import ayds.songinfo.moredetails.fulllogic.data.repository.local.LocalDataSourceImpl
 import ayds.songinfo.moredetails.fulllogic.presentation.DetailsDescriptionHelperImpl
-import retrofit2.Retrofit
-import retrofit2.converter.scalars.ScalarsConverterFactory
 
 private const val ARTICLE_BD_NAME = "database-name-thename"
-private const val LASTFM_BASE_URL = "https://ws.audioscrobbler.com/2.0/"
+
 
 
 object DependencyInjector {
@@ -29,17 +25,9 @@ object DependencyInjector {
             ArticleDatabase::class.java,
             ARTICLE_BD_NAME
         ).build()
-        val articleLocalStorage = LocalDataSourceImpl(articleDatabase) //TODO esto esta bien? ¿por que no usa la interface?
+        val articleLocalStorage = LocalDataSourceImpl(articleDatabase)
 
-        val retrofit = Retrofit.Builder()
-            .baseUrl(LASTFM_BASE_URL)
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .build()
-        val artistAPIRequest = retrofit.create(ArtistAPIRequest::class.java)
-
-        val remoteDataSource = RemoteDataSourceImpl(artistAPIRequest)
-
-        val repository = RepositoryImpl(articleLocalStorage, remoteDataSource)
+        val repository = RepositoryImpl(articleLocalStorage, LastFMInjector.getRemoteData())
 
         detailsPresenter = DetailsPresenterImpl(detailsDescriptionHelper, repository)
     }

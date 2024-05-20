@@ -1,8 +1,6 @@
 package ayds.songinfo.moredetails.fulllogic.presentation
 
 import ayds.songinfo.moredetails.fulllogic.domain.entity.ArtistDetails
-import io.mockk.every
-import io.mockk.mockk
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -98,18 +96,17 @@ class DetailsDescriptionHelperImplTest {
     }
 
     @Test
-    fun `description should be generated correctly using mocked artist details`() {
-        val artistDetails: ArtistDetails = mockk()
-
-        every { artistDetails.artistName } returns "Mocked Artist"
-        every { artistDetails.biography } returns "This is a biography of Mocked Artist."
-        every { artistDetails.articleUrl } returns "http://mocked.url"
-        every { artistDetails.isLocallyStored } returns false
+    fun `biography should convert double slash to HTML breaks`() {
+        val artistDetails = ArtistDetails(
+            "Beatles",
+            "The Beatles are a legendary band.\\nThey changed the music world.",
+            "url"
+        )
 
         val result = detailsDescriptionHelper.getDescription(artistDetails)
 
         val expected = "<html><div width=400><font face=\"arial\">" +
-                "This is a biography of <b>MOCKED ARTIST</b>." +
+                "The <b>BEATLES</b> are a legendary band.<br>They changed the music world." +
                 "</font></div></html>"
 
         assertEquals(expected, result)

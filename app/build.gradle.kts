@@ -44,8 +44,8 @@ dependencies {
     implementation(libs.picasso)
     implementation(libs.androidx.room)
     implementation(libs.constraintlayout)
-    implementation(libs.firebase.firestore.ktx)
 
+    ksp(libs.androidx.room.compiler)
     testImplementation(libs.androidx.junit)
     testImplementation(libs.mockk)
 

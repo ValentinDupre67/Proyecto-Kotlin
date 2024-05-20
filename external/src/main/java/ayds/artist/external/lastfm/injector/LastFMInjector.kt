@@ -1,5 +1,8 @@
-package ayds.artist.external.lastfm
+package ayds.artist.external.lastfm.injector
 
+import ayds.artist.external.lastfm.data.ArtistAPIRequest
+import ayds.artist.external.lastfm.data.RemoteDataSource
+import ayds.artist.external.lastfm.data.RemoteDataSourceImpl
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 

@@ -1,7 +1,7 @@
 package ayds.songinfo.moredetails.fulllogic.data.repository
 
 import DetailsRepository
-import ayds.artist.external.lastfm.RemoteDataSource
+import ayds.artist.external.lastfm.data.RemoteDataSource
 import ayds.songinfo.moredetails.fulllogic.data.repository.local.LocalDataSource
 import ayds.songinfo.moredetails.fulllogic.domain.entity.Card
 import io.mockk.every

@@ -4,15 +4,13 @@ import DetailsPresenter
 import DetailsPresenterImpl
 import android.content.Context
 import androidx.room.Room
-import ayds.artist.external.lastfm.LastFMInjector
+import ayds.artist.external.lastfm.injector.LastFMInjector
 import ayds.songinfo.moredetails.fulllogic.data.repository.RepositoryImpl
 import ayds.songinfo.moredetails.fulllogic.data.repository.local.ArticleDatabase
 import ayds.songinfo.moredetails.fulllogic.data.repository.local.LocalDataSourceImpl
 import ayds.songinfo.moredetails.fulllogic.presentation.DetailsDescriptionHelperImpl
 
 private const val ARTICLE_BD_NAME = "database-name-thename"
-
-
 
 object DependencyInjector {
     private lateinit var detailsPresenter: DetailsPresenter

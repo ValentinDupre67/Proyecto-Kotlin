@@ -1,7 +1,5 @@
-package ayds.artist.external.lastfm
+package ayds.artist.external.lastfm.data
 
-import ayds.artist.external.lastfm.data.LastFMCard
-import ayds.artist.external.lastfm.data.Source
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import java.io.IOException

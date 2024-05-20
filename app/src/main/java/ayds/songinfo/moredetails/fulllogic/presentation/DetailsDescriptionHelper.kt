@@ -18,7 +18,7 @@ internal class DetailsDescriptionHelperImpl: DetailsDescriptionHelper {
 
     private fun getTextBiography(artistDetails: ArtistDetails): String {
         val prefix = if (artistDetails.isLocallyStored) "[*]" else ""
-        val text = artistDetails.biography.replace("\\n", "\n")
+        val text = artistDetails.biography.replace("\\n", "\n") //TODO smell, no es bueno tener la lógica repartida 
         return "$prefix$text"
     }
 

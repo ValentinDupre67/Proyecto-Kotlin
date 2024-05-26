@@ -4,23 +4,23 @@ import ayds.songinfo.moredetails.fulllogic.domain.entity.Card
 
 
 interface LocalDataSource{
-    fun getArticleByArtistName(artisName: String): Card?
-    fun insertArtist(card: Card)
+    fun getCardByArtistName(artisName: String): Card?
+    fun insertCard(card: Card)
 }
 internal class LocalDataSourceImpl(
-    private val articleDatabase: ArticleDatabase):
+    private val cardDatabase: CardDatabase):
     LocalDataSource {
-    override fun getArticleByArtistName(artisName: String): Card?{
-        val articleEntity = articleDatabase.ArticleDao().getArticleByArtistName(artisName)
-        return articleEntity?.let {
-            Card(artisName, articleEntity.biography, articleEntity.articleUrl)
+    override fun getCardByArtistName(artisName: String): Card?{
+        val cardEntity = cardDatabase.CardDao().getCardByArtistName(artisName)
+        return cardEntity?.let {
+            Card(cardEntity.artistName, cardEntity.description, cardEntity.infoUrl, cardEntity.source, cardEntity.sourceLogoUrl)
         }
     }
 
-    override fun insertArtist(card: Card) {
-        articleDatabase.ArticleDao().insertArticle(
-            ArticleEntity(
-                card.artistName, card.biography, card.articleUrl
+    override fun insertCard(card: Card) {
+        cardDatabase.CardDao().insertCard(
+            CardEntity(
+                card.artistName, card.description, card.infoUrl, card.source, card.sourceLogoUrl
             )
         )
     }

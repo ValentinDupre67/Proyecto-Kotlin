@@ -23,13 +23,13 @@ class DetailsPresenterImplTest {
         val biography = "Description for The Beatles"
         val card = Card(
             artistName = artistName,
-            biography = "The Beatles were an English rock band.",
-            articleUrl = articleUrl,
+            description = "The Beatles were an English rock band.",
+            infoUrl = articleUrl,
             isLocallyStored = true
         )
         val expectedUiState = DetailsUiState(
             artistName = artistName,
-            biography = biography,
+            description = biography,
             articleUrl = articleUrl
         )
 

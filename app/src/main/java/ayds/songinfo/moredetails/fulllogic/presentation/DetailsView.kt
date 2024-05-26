@@ -3,12 +3,13 @@ package ayds.songinfo.moredetails.fulllogic.presentation
 import DetailsPresenter
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Html
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import ayds.artist.external.lastfm.data.Source
 import ayds.songinfo.R
 import ayds.songinfo.moredetails.fulllogic.injector.DependencyInjector
 import com.squareup.picasso.Picasso
@@ -17,6 +18,7 @@ import com.squareup.picasso.Picasso
 class DetailsViewActivity : AppCompatActivity() {
 
     private lateinit var textPanel: TextView
+    private lateinit var textSource: TextView
     private lateinit var openUrlButton: Button
     private lateinit var logoImageView: ImageView
 
@@ -24,7 +26,7 @@ class DetailsViewActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_details_view)
+        setContentView(R.layout.activity_other_info)
 
         initModule()
         initViewProperties()
@@ -46,6 +48,7 @@ class DetailsViewActivity : AppCompatActivity() {
 
     private fun initViewProperties() {
         textPanel = findViewById(R.id.textPanel)
+        textSource = findViewById(R.id.textSource)
         logoImageView = findViewById(R.id.imageView1);
         openUrlButton = findViewById(R.id.openUrlButton)
     }
@@ -63,9 +66,19 @@ class DetailsViewActivity : AppCompatActivity() {
 
     private fun updateUi(detailsUiState: DetailsUiState) {
         runOnUiThread {
-            updateOpenUrlButton(detailsUiState.articleUrl)
+            updateOpenUrlButton(detailsUiState.infoUrl)
             updateLastFMLogo(detailsUiState.imageUrl)
-            updateArticleText(detailsUiState.biography)
+            updateArticleText(detailsUiState.description)
+            updateSourceText(detailsUiState.source)
+        }
+    }
+
+    private fun updateSourceText(source: Source) {
+        val prefix = "Source: "
+        textSource.text = when (source) {
+            Source.LASTFM -> prefix + "Last FM"
+            Source.NYTIMES -> prefix + "New York Times"
+            Source.WIKIPEDIA -> prefix + "Wikipedia"
         }
     }
 

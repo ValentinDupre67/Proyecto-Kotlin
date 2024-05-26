@@ -1,8 +1,12 @@
 package ayds.songinfo.moredetails.fulllogic.presentation
 
+import ayds.artist.external.lastfm.data.Source
+
 data class DetailsUiState(
-    var artistName: String = "",
-    val biography: String = "",
-    val articleUrl: String = "",
+    val artistName: String = "",
+    val description: String = "",
+    val infoUrl: String = "",
+    val source: Source,
     val imageUrl: String =
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png")
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
+)

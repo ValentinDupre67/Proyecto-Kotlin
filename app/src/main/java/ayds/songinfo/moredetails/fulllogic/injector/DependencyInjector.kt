@@ -6,11 +6,11 @@ import android.content.Context
 import androidx.room.Room
 import ayds.artist.external.lastfm.injector.LastFMInjector
 import ayds.songinfo.moredetails.fulllogic.data.repository.RepositoryImpl
-import ayds.songinfo.moredetails.fulllogic.data.repository.local.ArticleDatabase
+import ayds.songinfo.moredetails.fulllogic.data.repository.local.CardDatabase
 import ayds.songinfo.moredetails.fulllogic.data.repository.local.LocalDataSourceImpl
 import ayds.songinfo.moredetails.fulllogic.presentation.DetailsDescriptionHelperImpl
 
-private const val ARTICLE_BD_NAME = "database-name-thename"
+private const val CARD_BD_NAME = "database-name-thename2"
 
 object DependencyInjector {
     private lateinit var detailsPresenter: DetailsPresenter
@@ -20,8 +20,8 @@ object DependencyInjector {
 
         val articleDatabase = Room.databaseBuilder(
             context,
-            ArticleDatabase::class.java,
-            ARTICLE_BD_NAME
+            CardDatabase::class.java,
+            CARD_BD_NAME
         ).build()
         val articleLocalStorage = LocalDataSourceImpl(articleDatabase)
 

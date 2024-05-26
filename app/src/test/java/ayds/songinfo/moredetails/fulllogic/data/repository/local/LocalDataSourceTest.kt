@@ -1,14 +1,5 @@
 package ayds.songinfo.moredetails.fulllogic.data.repository.local
 
-import ayds.songinfo.moredetails.fulllogic.domain.entity.Card
-import io.mockk.Runs
-import io.mockk.every
-import io.mockk.just
-import io.mockk.mockk
-import junit.framework.TestCase.assertEquals
-import junit.framework.TestCase.assertNotNull
-import org.junit.Test
-
 class LocalDataSourceTest{
 
     private val articleDatabase : ArticleDatabase = mockk(relaxUnitFun = true)
@@ -56,16 +47,16 @@ class LocalDataSourceTest{
 
         localDataSource.insertArtist(Card(
             artistName = "pedroMockk",
-            biography = "this's a biography of pedroMockk",
-            articleUrl = "url of pedroMockk"
+            description = "this's a biography of pedroMockk",
+            infoUrl = "url of pedroMockk"
         ))
 
         val result = localDataSource.getArticleByArtistName("pedroMockk")
 
         assertNotNull(result)
         assertEquals(articleEntityTest.artistName, result?.artistName)
-        assertEquals(articleEntityTest.biography, result?.biography)
-        assertEquals(articleEntityTest.articleUrl, result?.articleUrl)
+        assertEquals(articleEntityTest.biography, result?.description)
+        assertEquals(articleEntityTest.articleUrl, result?.infoUrl)
 
     }
 }

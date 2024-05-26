@@ -9,15 +9,15 @@ internal class RepositoryImpl(
     private val remoteDataSource : RemoteDataSource
 ) : DetailsRepository {
     override fun getArtist(artistName: String): Card {
-        val dbArticle = localDataSource.getArticleByArtistName(artistName)
+        val dbArticle = localDataSource.getCardByArtistName(artistName)
         val card: Card
         if (dbArticle != null) {
             card = dbArticle.apply { markItAsLocal() }
         } else {
-            val remoteDataCard = remoteDataSource.getArticleByArtistName(artistName)
-            card = Card(remoteDataCard.artistName, remoteDataCard.biography, remoteDataCard.articleUrl, remoteDataCard.isLocallyStored)
-            if (card.biography.isNotEmpty()) {
-                localDataSource.insertArtist(card)
+            val remoteDataCard = remoteDataSource.getCardByArtistName(artistName)
+            card = Card(remoteDataCard.artistName, remoteDataCard.description, remoteDataCard.infoUrl,  remoteDataCard.source, remoteDataCard.sourceLogoUrl, remoteDataCard.isLocallyStored)
+            if (card.description.isNotEmpty()) {
+                localDataSource.insertCard(card)
             }
         }
         return card

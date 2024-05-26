@@ -53,7 +53,7 @@ class RepositoryImplTest{
 
         val result = repository.getArtist(artistName)
 
-        assertFalse(artisDetailsTest.biography.isNotEmpty())
+        assertFalse(artisDetailsTest.description.isNotEmpty())
         assertEquals(result,artisDetailsTest)
         verify(exactly = 0) { localDataSource.insertArtist(artisDetailsTest) }
     }
@@ -73,7 +73,7 @@ class RepositoryImplTest{
 
         val result = repository.getArtist(artistName)
 
-        assertTrue(artisDetailsTest.biography.isNotEmpty())
+        assertTrue(artisDetailsTest.description.isNotEmpty())
         assertEquals(result,artisDetailsTest)
         verify(exactly = 1) { localDataSource.insertArtist(any()) }
     }

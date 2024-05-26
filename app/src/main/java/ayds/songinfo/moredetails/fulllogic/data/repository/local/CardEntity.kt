@@ -2,11 +2,14 @@ package ayds.songinfo.moredetails.fulllogic.data.repository.local
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import ayds.artist.external.lastfm.data.Source
 
 @Entity
-data class ArticleEntity(
+data class CardEntity(
     @PrimaryKey
     val artistName: String,
-    val biography: String,
-    val articleUrl: String
+    val description: String,
+    val infoUrl: String,
+    val source: Source,
+    val sourceLogoUrl: String
 )

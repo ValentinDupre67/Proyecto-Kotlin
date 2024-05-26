@@ -18,7 +18,7 @@ internal class DetailsDescriptionHelperImpl: DetailsDescriptionHelper {
 
     private fun getTextBiography(card: Card): String {
         val prefix = if (card.isLocallyStored) "[*]" else ""
-        val text = card.biography.replace("\\n", "\n") //TODO smell, no es bueno tener la lógica repartida
+        val text = card.description.replace("\\n", "\n") //TODO smell, no es bueno tener la lógica repartida
         return "$prefix$text"
     }
 

@@ -34,7 +34,7 @@ class RepositoryImplTest{
         )
         every { localDataSource.getArticleByArtistName(artistName) } returns cardTest;
 
-        val result = repository.getArtist(artistName)
+        val result = repository.getCard(artistName)
 
         assertEquals(result,cardTest)
         assertTrue(cardTest.isLocallyStored)
@@ -51,7 +51,7 @@ class RepositoryImplTest{
         every { localDataSource.getArticleByArtistName(artistName) } returns null;
         every {remoteDataSource.getArticleByArtistName(artistName)} returns artisDetailsTest;
 
-        val result = repository.getArtist(artistName)
+        val result = repository.getCard(artistName)
 
         assertFalse(artisDetailsTest.description.isNotEmpty())
         assertEquals(result,artisDetailsTest)
@@ -71,7 +71,7 @@ class RepositoryImplTest{
         every {remoteDataSource.getArticleByArtistName(artistName)} returns artisDetailsTest;
         //verify { localDataSource.insertArtist(any()) } ¿por que si lo pongo aca no pasa el test??
 
-        val result = repository.getArtist(artistName)
+        val result = repository.getCard(artistName)
 
         assertTrue(artisDetailsTest.description.isNotEmpty())
         assertEquals(result,artisDetailsTest)

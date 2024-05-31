@@ -34,7 +34,7 @@ class DetailsPresenterImplTest {
         )
 
         every { detailsDescriptionHelper.getDescription(card) } returns biography
-        every { repository.getArtist(artistName) } returns card
+        every { repository.getCard(artistName) } returns card
 
         val uiStateTester: (DetailsUiState) -> Unit = mockk(relaxed = true)
         detailsPresenter.detailsUiObservable.subscribe {

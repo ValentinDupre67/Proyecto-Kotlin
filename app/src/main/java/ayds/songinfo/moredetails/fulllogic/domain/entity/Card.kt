@@ -6,7 +6,9 @@ data class Card(
     val artistName: String,
     val description: String,
     val infoUrl: String,
-    val source: Source,
-    val sourceLogoUrl: String,
+    val source: CardSource,
     var isLocallyStored: Boolean = false
 )
+enum class CardSource{
+    LASTFM
+}

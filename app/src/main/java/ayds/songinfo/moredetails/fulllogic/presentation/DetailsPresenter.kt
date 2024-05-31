@@ -15,7 +15,7 @@ internal class DetailsPresenterImpl(
 
     override val detailsUiObservable = Subject<DetailsUiState>()
     override fun getArtistInfo(artistName : String) {
-        val uiState = repository.getArtist(artistName).toUiState()
+        val uiState = repository.getCard(artistName).toUiState()
 
         detailsUiObservable.notify(uiState)
     }
@@ -23,8 +23,6 @@ internal class DetailsPresenterImpl(
     private fun Card.toUiState() = DetailsUiState(
         artistName,
         detailsDescriptionHelper.getDescription(this),
-        infoUrl,
-        source,
-        sourceLogoUrl
+        infoUrl
     )
 }

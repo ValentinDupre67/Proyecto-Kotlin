@@ -1,6 +1,7 @@
 package ayds.songinfo.moredetails.fulllogic.data.repository.local
 
 import ayds.songinfo.moredetails.fulllogic.domain.entity.Card
+import ayds.songinfo.moredetails.fulllogic.domain.entity.CardSource
 
 
 interface LocalDataSource{
@@ -13,14 +14,14 @@ internal class LocalDataSourceImpl(
     override fun getCardByArtistName(artisName: String): Card?{
         val cardEntity = cardDatabase.CardDao().getCardByArtistName(artisName)
         return cardEntity?.let {
-            Card(cardEntity.artistName, cardEntity.description, cardEntity.infoUrl, cardEntity.source, cardEntity.sourceLogoUrl)
+            Card(cardEntity.artistName, cardEntity.description, cardEntity.infoUrl, CardSource.LASTFM)
         }
     }
 
     override fun insertCard(card: Card) {
         cardDatabase.CardDao().insertCard(
             CardEntity(
-                card.artistName, card.description, card.infoUrl, card.source, card.sourceLogoUrl
+                card.artistName, card.description, card.infoUrl, CardSource.LASTFM.ordinal,
             )
         )
     }

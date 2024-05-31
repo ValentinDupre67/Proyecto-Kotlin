@@ -69,7 +69,6 @@ class DetailsViewActivity : AppCompatActivity() {
             updateOpenUrlButton(detailsUiState.infoUrl)
             updateLastFMLogo(detailsUiState.imageUrl)
             updateArticleText(detailsUiState.description)
-            updateSourceText(detailsUiState.source)
         }
     }
 

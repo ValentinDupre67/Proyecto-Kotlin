@@ -1,7 +1,5 @@
 package ayds.songinfo.moredetails.fulllogic.presentation
 
-import ayds.artist.external.lastfm.data.Source
-
 data class DetailsUiState(
     val artistName: String = "",
     val description: String = "",

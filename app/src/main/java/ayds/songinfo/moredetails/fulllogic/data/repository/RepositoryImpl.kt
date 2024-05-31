@@ -16,7 +16,7 @@ internal class RepositoryImpl(
             card = dbArticle.apply { markItAsLocal() }
         } else {
             val remoteDataCard = remoteDataSource.getCardByArtistName(artistName)
-            card = Card(remoteDataCard.artistName, remoteDataCard.description, remoteDataCard.infoUrl,  CardSource.LASTFM, remoteDataCard.isLocallyStored)
+            card = Card(remoteDataCard.artistName, remoteDataCard.description, remoteDataCard.infoUrl,  CardSource.LASTFM)
             if (card.description.isNotEmpty()) {
                 localDataSource.insertCard(card)
             }

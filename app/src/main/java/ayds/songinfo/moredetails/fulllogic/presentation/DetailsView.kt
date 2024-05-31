@@ -9,7 +9,6 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import ayds.artist.external.lastfm.data.Source
 import ayds.songinfo.R
 import ayds.songinfo.moredetails.fulllogic.injector.DependencyInjector
 import com.squareup.picasso.Picasso
@@ -18,7 +17,7 @@ import com.squareup.picasso.Picasso
 class DetailsViewActivity : AppCompatActivity() {
 
     private lateinit var textPanel: TextView
-    private lateinit var textSource: TextView
+    private lateinit var cardTextView: TextView
     private lateinit var openUrlButton: Button
     private lateinit var logoImageView: ImageView
 
@@ -48,7 +47,7 @@ class DetailsViewActivity : AppCompatActivity() {
 
     private fun initViewProperties() {
         textPanel = findViewById(R.id.textPanel)
-        textSource = findViewById(R.id.textSource)
+        cardTextView = findViewById(R.id.textSource)
         logoImageView = findViewById(R.id.imageView1);
         openUrlButton = findViewById(R.id.openUrlButton)
     }
@@ -72,13 +71,8 @@ class DetailsViewActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateSourceText(source: Source) {
-        val prefix = "Source: "
-        textSource.text = when (source) {
-            Source.LASTFM -> prefix + "Last FM"
-            Source.NYTIMES -> prefix + "New York Times"
-            Source.WIKIPEDIA -> prefix + "Wikipedia"
-        }
+    private fun updateSourceText(infoHtml: String) {
+        cardTextView.text = Html.fromHtml((infoHtml))
     }
 
     private fun updateOpenUrlButton(articleUrl: String) {

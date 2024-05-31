@@ -1,6 +1,6 @@
 package ayds.artist.external.lastfm.injector
 
-import ayds.artist.external.lastfm.data.ArtistAPIRequest
+import ayds.artist.external.lastfm.data.LastFMAPI
 import ayds.artist.external.lastfm.data.RemoteDataSource
 import ayds.artist.external.lastfm.data.RemoteDataSourceImpl
 import retrofit2.Retrofit
@@ -16,12 +16,12 @@ object LastFMInjector {
         return RemoteDataSourceImpl(artistAPIRequest)
     }
 
-    private fun artistAPIRequest(): ArtistAPIRequest {
+    private fun artistAPIRequest(): LastFMAPI {
         val retrofit = Retrofit.Builder()
             .baseUrl(LASTFM_BASE_URL)
             .addConverterFactory(ScalarsConverterFactory.create())
             .build()
-        return  retrofit.create(ArtistAPIRequest::class.java)
+        return  retrofit.create(LastFMAPI::class.java)
     }
 
 }

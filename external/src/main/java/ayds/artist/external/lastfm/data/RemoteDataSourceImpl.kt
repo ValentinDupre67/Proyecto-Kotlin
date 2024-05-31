@@ -8,10 +8,10 @@ interface RemoteDataSource {
     fun getCardByArtistName(artistName: String): LastFMCard
 }
 
-internal class RemoteDataSourceImpl (private val artistAPIRequest: ArtistAPIRequest):
+internal class RemoteDataSourceImpl (private val artistAPIRequest: LastFMAPI):
     RemoteDataSource {
     override fun getCardByArtistName(artistName: String): LastFMCard {
-        var artistDetails = LastFMCard(artistName, "", "", Source.LASTFM)
+        var artistDetails = LastFMCard(artistName, "", "", )
         try {
             val callResponse = getSongFromService(artistName)
             artistDetails = getArtistBioFromExternalData(callResponse.body(), artistName)
@@ -30,7 +30,7 @@ internal class RemoteDataSourceImpl (private val artistAPIRequest: ArtistAPIRequ
         val url = artist["url"]
         val text = extract?.asString ?: "No Results"
 
-        return LastFMCard(artistName, text, url.asString, Source.LASTFM)
+        return LastFMCard(artistName, text, url.asString)
     }
 
     private fun getSongFromService(artistName: String) =

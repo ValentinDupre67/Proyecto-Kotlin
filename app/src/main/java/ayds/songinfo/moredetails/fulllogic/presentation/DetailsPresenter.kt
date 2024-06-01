@@ -23,6 +23,7 @@ internal class DetailsPresenterImpl(
     private fun Card.toUiState() = DetailsUiState(
         artistName,
         detailsDescriptionHelper.getDescription(this),
-        infoUrl
+        infoUrl,
+        source
     )
 }

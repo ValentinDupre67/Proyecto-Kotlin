@@ -14,14 +14,14 @@ internal class LocalDataSourceImpl(
     override fun getCardByArtistName(artisName: String): Card?{
         val cardEntity = cardDatabase.CardDao().getCardByArtistName(artisName)
         return cardEntity?.let {
-            Card(cardEntity.artistName, cardEntity.description, cardEntity.infoUrl, CardSource.LASTFM)
+            Card(cardEntity.artistName, cardEntity.description, cardEntity.infoUrl, CardSource.entries[cardEntity.source])
         }
     }
 
     override fun insertCard(card: Card) {
         cardDatabase.CardDao().insertCard(
             CardEntity(
-                card.artistName, card.description, card.infoUrl, CardSource.LASTFM.ordinal,
+                card.artistName, card.description, card.infoUrl, CardSource.LASTFM.ordinal
             )
         )
     }

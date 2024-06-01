@@ -8,5 +8,5 @@ data class Card(
     var isLocallyStored: Boolean = false
 )
 enum class CardSource{
-    LASTFM
+    LASTFM, NYTIMES, WIKIPEDIA
 }

@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import ayds.songinfo.R
+import ayds.songinfo.moredetails.fulllogic.domain.entity.CardSource
 import ayds.songinfo.moredetails.fulllogic.injector.DependencyInjector
 import com.squareup.picasso.Picasso
 
@@ -68,11 +69,17 @@ class DetailsViewActivity : AppCompatActivity() {
             updateOpenUrlButton(detailsUiState.infoUrl)
             updateLastFMLogo(detailsUiState.imageUrl)
             updateArticleText(detailsUiState.description)
+            updateSourceText(detailsUiState.source)
         }
     }
 
-    private fun updateSourceText(infoHtml: String) {
-        cardTextView.text = Html.fromHtml((infoHtml))
+    private fun updateSourceText(source: CardSource) {
+        val prefix = "Source: "
+        cardTextView.text = when (source) {
+            CardSource.LASTFM -> prefix + "Last FM"
+            CardSource.NYTIMES -> prefix + "New York Times"
+            CardSource.WIKIPEDIA -> prefix + "Wikipedia"
+        }
     }
 
     private fun updateOpenUrlButton(articleUrl: String) {

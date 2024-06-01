@@ -64,6 +64,14 @@
                 android:linksClickable="true"
                 android:padding="16dp" />
 
+            <TextView
+                android:id="@+id/textSource2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autoLink="web"
+                android:linksClickable="true"
+                android:padding="16dp" />
+
             <Button
                 android:id="@+id/openUrlButton2"
                 android:visibility="gone"
@@ -81,6 +89,14 @@
 
             <TextView
                 android:id="@+id/textPane3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autoLink="web"
+                android:linksClickable="true"
+                android:padding="16dp" />
+
+            <TextView
+                android:id="@+id/textSource3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:autoLink="web"

@@ -18,9 +18,20 @@ import com.squareup.picasso.Picasso
 class DetailsViewActivity : AppCompatActivity() {
 
     private lateinit var textPanel: TextView
-    private lateinit var cardTextView: TextView
+    private lateinit var textSource: TextView
     private lateinit var openUrlButton: Button
     private lateinit var logoImageView: ImageView
+
+    private lateinit var textDescriptionNY: TextView
+    private lateinit var textSourceNY: TextView
+    private lateinit var openUrlNYButton: Button
+    private lateinit var logoNYImageView: ImageView
+
+    private lateinit var textDescriptionWikipedia: TextView
+    private lateinit var textSourceWikipedia: TextView
+    private lateinit var openUrlWikipediaButton: Button
+    private lateinit var logoWikipediaImageView: ImageView
+
 
     private lateinit var detailsPresenter: DetailsPresenter
 
@@ -48,9 +59,17 @@ class DetailsViewActivity : AppCompatActivity() {
 
     private fun initViewProperties() {
         textPanel = findViewById(R.id.textPanel)
-        cardTextView = findViewById(R.id.textSource)
+        textSource = findViewById(R.id.textSource)
         logoImageView = findViewById(R.id.imageView1);
         openUrlButton = findViewById(R.id.openUrlButton)
+        textDescriptionNY = findViewById(R.id.textPane2)
+        textSourceNY = findViewById(R.id.textSource2)
+        openUrlNYButton = findViewById(R.id.openUrlButton2)
+        logoNYImageView = findViewById(R.id.imageView2)
+        textDescriptionWikipedia = findViewById(R.id.textPane3)
+        textSourceWikipedia = findViewById(R.id.textSource3)
+        openUrlWikipediaButton = findViewById(R.id.openUrlButton3)
+        logoWikipediaImageView = findViewById(R.id.imageView3)
     }
 
     private fun getArtistInfoAsync() {
@@ -64,26 +83,52 @@ class DetailsViewActivity : AppCompatActivity() {
         detailsPresenter.getArtistInfo(artistName)
     }
 
-    private fun updateUi(detailsUiState: DetailsUiState) {
+    private fun updateUi(detailsUiState: List<DetailsUiState>) {
         runOnUiThread {
-            updateOpenUrlButton(detailsUiState.infoUrl)
-            updateLastFMLogo(detailsUiState.imageUrl)
-            updateArticleText(detailsUiState.description)
-            updateSourceText(detailsUiState.source)
+            detailsUiState.forEach {
+                when(it.source) {
+                    CardSource.LASTFM    -> updateUiLastFM(it)
+                    CardSource.NYTIMES   -> updateUiNYTimes(it)
+                    CardSource.WIKIPEDIA -> updateUiWikipedia(it)
+                }
+            }
         }
     }
+    private fun updateUiLastFM(uiState: DetailsUiState) {
+        updateSourceText(uiState.source, textSource)
+        updateOpenUrlButton(uiState.infoUrl, openUrlButton)
+        updateImageLogo(uiState.imageUrl, logoImageView)
+        updateArticleText(uiState.description, textPanel)
+    }
 
-    private fun updateSourceText(source: CardSource) {
+    private fun updateUiNYTimes(uiState: DetailsUiState) {
+        updateSourceText(uiState.source, textSourceNY)
+        updateOpenUrlButton(uiState.infoUrl, openUrlNYButton)
+        updateImageLogo(uiState.imageUrl, logoNYImageView)
+        updateArticleText(uiState.description, textDescriptionNY)
+    }
+
+    private fun updateUiWikipedia(uiState: DetailsUiState) {
+        updateSourceText(uiState.source, textSourceWikipedia)
+        updateOpenUrlButton(uiState.infoUrl, openUrlWikipediaButton)
+        updateImageLogo(uiState.imageUrl, logoWikipediaImageView)
+        updateArticleText(uiState.description, textSourceWikipedia)
+    }
+
+    private fun updateSourceText(source: CardSource, textView: TextView) {
         val prefix = "Source: "
-        cardTextView.text = when (source) {
-            CardSource.LASTFM -> prefix + "Last FM"
-            CardSource.NYTIMES -> prefix + "New York Times"
-            CardSource.WIKIPEDIA -> prefix + "Wikipedia"
+        val sourceText = when (source) {
+            CardSource.LASTFM -> "Last FM"
+            CardSource.NYTIMES -> "New York Times"
+            CardSource.WIKIPEDIA -> "Wikipedia"
         }
+        textView.text = "$prefix$sourceText"
     }
 
-    private fun updateOpenUrlButton(articleUrl: String) {
-        openUrlButton.setOnClickListener {
+
+    private fun updateOpenUrlButton(articleUrl: String, button: Button) {
+        button.visibility = Button.VISIBLE
+        button.setOnClickListener {
             navigateToUrl(articleUrl)
         }
     }
@@ -94,12 +139,12 @@ class DetailsViewActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun updateLastFMLogo(imageUrl: String) {
-        Picasso.get().load(imageUrl).into(logoImageView)
+    private fun updateImageLogo(imageUrl: String, imageView: ImageView) {
+        Picasso.get().load(imageUrl).into(imageView)
     }
 
-    private fun updateArticleText(biography: String) {
-        textPanel.text = Html.fromHtml(biography)
+    private fun updateArticleText(biography: String, textView: TextView) {
+        textView.text = Html.fromHtml(biography)
     }
 
     private fun getArtistName() =

@@ -1,19 +1,19 @@
 package ayds.artist.external.lastfm.injector
 
 import ayds.artist.external.lastfm.data.LastFMAPI
-import ayds.artist.external.lastfm.data.RemoteDataSource
-import ayds.artist.external.lastfm.data.RemoteDataSourceImpl
+import ayds.artist.external.lastfm.data.LastFMService
+import ayds.artist.external.lastfm.data.LastFMServiceImpl
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
 private const val LASTFM_BASE_URL = "https://ws.audioscrobbler.com/2.0/"
 object LastFMInjector {
 
-    fun getRemoteData() : RemoteDataSource {
+    fun getRemoteData() : LastFMService {
 
         val artistAPIRequest = artistAPIRequest()
 
-        return RemoteDataSourceImpl(artistAPIRequest)
+        return LastFMServiceImpl(artistAPIRequest)
     }
 
     private fun artistAPIRequest(): LastFMAPI {

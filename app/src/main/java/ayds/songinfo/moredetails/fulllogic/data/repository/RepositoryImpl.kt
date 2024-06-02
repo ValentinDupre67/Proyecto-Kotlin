@@ -1,6 +1,6 @@
 package ayds.songinfo.moredetails.fulllogic.data.repository
 import DetailsRepository
-import ayds.artist.external.lastfm.data.RemoteDataSource
+import ayds.artist.external.lastfm.data.LastFMService
 import ayds.artist.external.newyorktimes.data.NYTimesArticle
 import ayds.artist.external.newyorktimes.injector.NYTimesInjector
 import ayds.artist.external.wikipedia.injector.WikipediaInjector
@@ -10,36 +10,40 @@ import ayds.songinfo.moredetails.fulllogic.domain.entity.CardSource
 
 internal class RepositoryImpl(
     private val localDataSource: LocalDataSource,
-    private val remoteDataSource : RemoteDataSource
+    private val lastFMService : LastFMService
 ) : DetailsRepository {
     override fun getCard(artistName: String): List<Card> {
-        val dbArticle = localDataSource.getCardByArtistName(artistName)
+        val dbArticleList = localDataSource.getCardByArtistName(artistName)
         val listCards = mutableListOf<Card>()
-        if (dbArticle != null) {
-            listCards.add(dbArticle.apply { markItAsLocal() })
-        } else {
-            val lastFMCard = fetchLastFmCard(artistName)
-            val nyTimesCard = fetchNYTimesCard(artistName)
-            val wikipediaCard = fetchWikipediaCard(artistName)
 
-            if (nyTimesCard != null) {
-                listCards.add(nyTimesCard)
-                saveCardIfNotEmpty(nyTimesCard)
+        for (dbArticle in dbArticleList) {
+            if (dbArticle != null) {
+                listCards.add(dbArticle.apply { markItAsLocal() })
+            } else {
+                val lastFMCard = fetchLastFmCard(artistName)
+                val nyTimesCard = fetchNYTimesCard(artistName)
+                val wikipediaCard = fetchWikipediaCard(artistName)
+
+                if (nyTimesCard != null) {
+                    listCards.add(nyTimesCard)
+                    saveCardIfNotEmpty(nyTimesCard)
+                }
+
+                if (wikipediaCard != null) {
+                    listCards.add(wikipediaCard)
+                    saveCardIfNotEmpty(wikipediaCard)
+                }
+
+                listCards.add(lastFMCard)
+                saveCardIfNotEmpty(lastFMCard)
             }
-
-            if (wikipediaCard != null) {
-                listCards.add(wikipediaCard)
-                saveCardIfNotEmpty(wikipediaCard)
-            }
-
-            listCards.add(lastFMCard)
-            saveCardIfNotEmpty(lastFMCard)
         }
         return listCards
+
     }
 
     private fun fetchLastFmCard(artistName: String): Card {
-        val remoteDataCard = remoteDataSource.getCardByArtistName(artistName)
+        val remoteDataCard = lastFMService.getCardByArtistName(artistName)
         return Card(
             remoteDataCard.artistName,
             remoteDataCard.description,

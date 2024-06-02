@@ -4,12 +4,12 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import java.io.IOException
 
-interface RemoteDataSource {
+interface LastFMService {
     fun getCardByArtistName(artistName: String): LastFMCard
 }
 
-internal class RemoteDataSourceImpl (private val artistAPIRequest: LastFMAPI):
-    RemoteDataSource {
+internal class LastFMServiceImpl (private val artistAPIRequest: LastFMAPI):
+    LastFMService {
     override fun getCardByArtistName(artistName: String): LastFMCard {
         var artistDetails = LastFMCard(artistName, "", "", )
         try {

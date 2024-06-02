@@ -11,7 +11,7 @@ interface CardDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertCard(card: CardEntity)
 
-    @Query("SELECT * FROM Cardentity WHERE artistName LIKE :artistName LIMIT 1")
-    fun getCardByArtistName(artistName: String): CardEntity?
+    @Query("SELECT * FROM Cardentity WHERE artistName LIKE :artistName AND source LIKE :source LIMIT 1")
+    fun getCardByArtistNameAndSource(artistName: String, source: String): CardEntity?
 
 }

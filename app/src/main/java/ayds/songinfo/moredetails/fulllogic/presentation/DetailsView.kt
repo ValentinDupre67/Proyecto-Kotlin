@@ -9,6 +9,8 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import ayds.artist.external.newyorktimes.data.NYTimesArticle
+import ayds.artist.external.newyorktimes.injector.NYTimesInjector
 import ayds.songinfo.R
 import ayds.songinfo.moredetails.fulllogic.domain.entity.CardSource
 import ayds.songinfo.moredetails.fulllogic.injector.DependencyInjector
@@ -97,21 +99,21 @@ class DetailsViewActivity : AppCompatActivity() {
     private fun updateUiLastFM(uiState: DetailsUiState) {
         updateSourceText(uiState.source, textSource)
         updateOpenUrlButton(uiState.infoUrl, openUrlButton)
-        updateImageLogo(uiState.imageUrl, logoImageView)
+        updateImageLogo(uiState.imageUrl.get(0), logoImageView)
         updateArticleText(uiState.description, textPanel)
     }
 
     private fun updateUiNYTimes(uiState: DetailsUiState) {
         updateSourceText(uiState.source, textSourceNY)
         updateOpenUrlButton(uiState.infoUrl, openUrlNYButton)
-        updateImageLogo(uiState.imageUrl, logoNYImageView)
+        updateImageLogo(uiState.imageUrl.get(1), logoNYImageView)
         updateArticleText(uiState.description, textDescriptionNY)
     }
 
     private fun updateUiWikipedia(uiState: DetailsUiState) {
         updateSourceText(uiState.source, textSourceWikipedia)
         updateOpenUrlButton(uiState.infoUrl, openUrlWikipediaButton)
-        updateImageLogo(uiState.imageUrl, logoWikipediaImageView)
+        updateImageLogo(uiState.imageUrl.get(2), logoWikipediaImageView)
         updateArticleText(uiState.description, textSourceWikipedia)
     }
 

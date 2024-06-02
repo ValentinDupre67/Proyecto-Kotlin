@@ -16,28 +16,36 @@ internal class RepositoryImpl(
         val dbArticleList = localDataSource.getCardByArtistName(artistName)
         val listCards = mutableListOf<Card>()
 
-        for (dbArticle in dbArticleList) {
-            if (dbArticle != null) {
-                listCards.add(dbArticle.apply { markItAsLocal() })
-            } else {
-                val lastFMCard = fetchLastFmCard(artistName)
-                val nyTimesCard = fetchNYTimesCard(artistName)
-                val wikipediaCard = fetchWikipediaCard(artistName)
 
-                if (nyTimesCard != null) {
-                    listCards.add(nyTimesCard)
-                    saveCardIfNotEmpty(nyTimesCard)
-                }
+        if (dbArticleList[0] != null) {
+            dbArticleList[0]?.apply { markItAsLocal() }?.let { listCards.add(it) }
+        } else {
+            val lastFMCard = fetchLastFmCard(artistName)
+            listCards.add(lastFMCard)
+            saveCardIfNotEmpty(lastFMCard)
+        }
 
-                if (wikipediaCard != null) {
-                    listCards.add(wikipediaCard)
-                    saveCardIfNotEmpty(wikipediaCard)
-                }
-
-                listCards.add(lastFMCard)
-                saveCardIfNotEmpty(lastFMCard)
+        if (dbArticleList[1] != null) {
+            dbArticleList[1]?.apply { markItAsLocal() }?.let { listCards.add(it) }
+        } else {
+            val nyTimesCard = fetchNYTimesCard(artistName)
+            if (nyTimesCard != null) {
+                listCards.add(nyTimesCard)
+                saveCardIfNotEmpty(nyTimesCard)
             }
         }
+
+        if (dbArticleList[2] != null) {
+            dbArticleList[2]?.apply { markItAsLocal() }?.let { listCards.add(it) }
+        } else {
+            val wikipediaCard = fetchWikipediaCard(artistName)
+            if (wikipediaCard != null) {
+                listCards.add(wikipediaCard)
+                saveCardIfNotEmpty(wikipediaCard)
+            }
+        }
+
+
         return listCards
 
     }

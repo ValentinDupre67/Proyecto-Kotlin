@@ -12,6 +12,6 @@ interface CardDao {
     fun insertCard(card: CardEntity)
 
     @Query("SELECT * FROM Cardentity WHERE artistName LIKE :artistName AND source LIKE :source LIMIT 1")
-    fun getCardByArtistNameAndSource(artistName: String, source: String): CardEntity?
+    fun getCardByArtistNameAndSource(artistName: String, source: Int): CardEntity?
 
 }

@@ -1,9 +1,6 @@
-package ayds.songinfo.moredetails.fulllogic.data.repository
+package ayds.songinfo.moredetails.fulllogic.data.repository.broker
 
 import ayds.artist.external.lastfm.data.LastFMService
-import ayds.songinfo.moredetails.fulllogic.data.repository.proxies.ProxyLastFM
-import ayds.songinfo.moredetails.fulllogic.data.repository.proxies.ProxyNYTimes
-import ayds.songinfo.moredetails.fulllogic.data.repository.proxies.ProxyWikipedia
 import ayds.songinfo.moredetails.fulllogic.domain.entity.Card
 
 

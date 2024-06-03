@@ -1,4 +1,4 @@
-package ayds.songinfo.moredetails.fulllogic.data.repository.proxies
+package ayds.songinfo.moredetails.fulllogic.data.repository.broker
 
 import ayds.artist.external.wikipedia.injector.WikipediaInjector
 import ayds.songinfo.moredetails.fulllogic.domain.entity.Card

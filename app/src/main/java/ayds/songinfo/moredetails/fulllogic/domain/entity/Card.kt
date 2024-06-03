@@ -6,6 +6,7 @@ data class Card(
     val infoUrl: String,
     val source: CardSource,
     var isLocallyStored: Boolean = false
+    //val LogoUrl = ""
 )
 enum class CardSource{
     LASTFM, NYTIMES, WIKIPEDIA

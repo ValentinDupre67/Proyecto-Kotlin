@@ -1,4 +1,4 @@
-package ayds.songinfo.moredetails.fulllogic.data.repository.proxies
+package ayds.songinfo.moredetails.fulllogic.data.repository.broker
 
 import ayds.artist.external.newyorktimes.data.NYTimesArticle
 import ayds.artist.external.newyorktimes.injector.NYTimesInjector
